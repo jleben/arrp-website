@@ -9,7 +9,7 @@ services:
             restart_policy:
                 condition: on-failure
             labels:
-                traefik.frontend.rule: "Host:127.0.0.2"
+                traefik.frontend.rule: "Host:arrp-lang.info"
                 traefik.port: 80
                 traefik.docker.network: traefik-net
     engine:
@@ -21,7 +21,7 @@ services:
             restart_policy:
                 condition: on-failure
             labels:
-                traefik.frontend.rule: "Host:127.0.0.2;PathStrip:/playground/request"
+                traefik.frontend.rule: "Host:arrp-lang.info;PathStrip:/playground/request"
                 traefik.port: 8000
                 traefik.docker.network: traefik-net
 

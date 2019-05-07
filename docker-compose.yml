@@ -1,18 +1,30 @@
 version: "3"
 services:
     ui:
-        image: jakobleben/arrp-web-ui:e988730
-        ports:
-            - "80:80"
+        image: jakobleben/arrp-web-ui:932c0ab
+        networks:
+            - traefik-net
         deploy:
             replicas: 1
             restart_policy:
                 condition: on-failure
+            labels:
+                traefik.frontend.rule: "Host:127.0.0.2"
+                traefik.port: 80
+                traefik.docker.network: traefik-net
     engine:
         image: jakobleben/arrp-web-engine:0f67eb8
-        ports:
-            - "8002:8000"
+        networks:
+            - traefik-net
         deploy:
             replicas: 1
             restart_policy:
                 condition: on-failure
+            labels:
+                traefik.frontend.rule: "Host:127.0.0.2;PathStrip:/playground/request"
+                traefik.port: 8000
+                traefik.docker.network: traefik-net
+
+networks:
+    traefik-net:
+        external: true

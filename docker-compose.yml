@@ -1,7 +1,7 @@
 version: "3"
 services:
     ui:
-        image: jakobleben/arrp-web-ui:932c0ab
+        image: jakobleben/arrp-web-ui:eef9147
         networks:
             - traefik-net
         deploy:

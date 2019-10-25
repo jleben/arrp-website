@@ -6,6 +6,7 @@ if (PUG_PROGRAM)
     set(pug_sources
         main.pug
         grammar.pug
+        pages/home.pug
         pages/doc.pug
         pages/play.pug
         pages/reference.pug

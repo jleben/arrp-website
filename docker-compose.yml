@@ -1,8 +1,9 @@
 version: "3"
 services:
     ui:
-        image: jakobleben/arrp-web-ui:eef9147
+        image: jakobleben/arrp-web-ui:1
         networks:
+            - default
             - traefik-net
         deploy:
             replicas: 1
@@ -12,18 +13,15 @@ services:
                 traefik.frontend.rule: "Host:arrp-lang.info"
                 traefik.port: 80
                 traefik.docker.network: traefik-net
-    engine:
-        image: jakobleben/arrp-web-engine:0f67eb8
+    compiler:
+        image: jakobleben/arrp-web-compiler:1
         networks:
+            - default
             - traefik-net
         deploy:
             replicas: 1
             restart_policy:
                 condition: on-failure
-            labels:
-                traefik.frontend.rule: "Host:arrp-lang.info;PathStrip:/playground/request"
-                traefik.port: 8000
-                traefik.docker.network: traefik-net
 
 networks:
     traefik-net:

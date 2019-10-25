@@ -1,6 +1,6 @@
-ARG ALPINE_DIGEST=sha256:13e33149491ce3a81a82207e8f43cd9b51bf1b8998927e57b1c2b53947961522
+ARG ALPINE_VERSION=:3.10.3
 
-FROM alpine@${ALPINE_DIGEST} as builder
+FROM alpine${ALPINE_VERSION} as builder
 
 RUN apk add build-base g++ cmake git linux-headers
 
@@ -19,14 +19,18 @@ RUN mkdir poco/cmake-build && cd poco/cmake-build && \
     .. && make install
 
 
-# Build Arrp
+# Get arrp build dependencies
+
+RUN apk add autoconf automake libtool gmp-dev
+
+# Get arrp repo
 
 RUN git clone https://github.com/jleben/arrp.git && \
     cd arrp && \
     git checkout f61fff70a878fd0ae5989603c1e58d5978e51391 && \
     git submodule update --init --recursive
 
-RUN apk add autoconf automake libtool gmp-dev
+# Build isl
 
 RUN cd arrp/extra/isl && \
     mkdir build && \
@@ -34,24 +38,26 @@ RUN cd arrp/extra/isl && \
     ./configure --prefix=$(pwd)/build && \
     make install
 
+# Build arrp
+
 # Use Clang from here on
 # ENV CC=/usr/bin/clang CXX=/usr/bin/clang++
 
 RUN mkdir arrp/build && cd arrp/build && \
-    cmake -D CMAKE_INSTALL_PREFIX=/opt/service/arrp .. && make install
+    cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt/service/arrp .. && make install
 
 
 # Build server
 
 COPY . server/
 RUN mkdir server/build && cd server/build && \
-    cmake -D CMAKE_INSTALL_PREFIX=/opt/service .. && \
+    cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt/service .. && \
     cmake --build . && make install .
 
 
 # Compose service
 
-FROM alpine@${ALPINE_DIGEST} as service
+FROM alpine${ALPINE_VERSION} as service
 
 RUN apk add g++
 

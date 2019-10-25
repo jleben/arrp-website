@@ -1,0 +1,152 @@
+pre.
+  
+  #[a(name='module') module] = #[a(href='#module-decl') module-decl]? #[a(href='#imports') imports] #[a(href='#declarations') declarations]
+  
+  #[a(name='module-decl') module-decl] = "module" #[a(href='#id') id] ";"
+  
+  #[a(name='imports') imports] = #[a(href='#import-decl') import-decl]*
+  
+  #[a(name='import-decl') import-decl] = "import" #[a(href='#id') id] ( "as" #[a(href='#id') id] )? ";"
+  
+  #[a(name='declarations') declarations] = ( #[a(href='#declaration') declaration] ( ";" #[a(href='#declaration') declaration] )* )? ";"?
+  
+  #[a(name='declaration') declaration] = #[a(href='#input-decl') input-decl] | #[a(href='#external-decl') external-decl] | #[a(href='#local-decl') local-decl]
+  
+  #[a(name='input-decl') input-decl] = "input" #[a(href='#id') id] "::" #[a(href='#type') type]
+  
+  #[a(name='external-decl') external-decl] = "external" #[a(href='#id') id] "::" #[a(href='#type') type]
+  
+  #[a(name='local-decl') local-decl] = #[a(href='#type-decl') type-decl] | #[a(href='#value-decl') value-decl]
+  
+  #[a(name='local-decls') local-decls] = #[a(href='#local-decl') local-decl] ( ";" #[a(href='#declaration') declaration] )*
+  
+  #[a(name='type-decl') type-decl] = #[a(href='#id') id] "::" #[a(href='#type') type]
+  
+  #[a(name='value-decl') value-decl] = #[a(href='#id') id] ( "(" #[a(href='#param-list') param-list] ")" )? "=" #[a(href='#expr') expr]
+  
+  #[a(name='param-list') param-list] = #[a(href='#id') id] ( "," #[a(href='#id') id] )*
+  
+  #[a(name='type') type] = #[a(href='#data-type') data-type] | #[a(href='#function-type') function-type]
+  
+  #[a(name='data-type') data-type] = #[a(href='#array-type') array-type] | #[a(href='#primitive-type') primitive-type]
+  
+  #[a(name='array-type') array-type] = "[" #[a(href='#expr-list') expr-list] "]" #[a(href='#primitive-type') primitive-type]
+  
+  #[a(name='primitive-type') primitive-type] = #[a(href='#id') id]
+  
+  #[a(name='function-type') function-type] = #[a(href='#data-type') data-type] ( "," #[a(href='#data-type') data-type] ) "->" #[a(href='#data-type') data-type]
+  
+  #[a(name='expr') expr] =
+      #[a(href='#id') id]
+      |
+      #[a(href='#qualified-id') qualified-id]
+      |
+      #[a(href='#literal') literal]
+      |
+      #[a(href='#infinity') infinity]
+      |
+      #[a(href='#unary-op') unary-op] #[a(href='#expr') expr]
+      |
+      #[a(href='#expr') expr] #[a(href='#binary-op') binary-op] #[a(href='#expr') expr]
+      |
+      #[a(href='#conditional') conditional]
+      |
+      #[a(href='#lambda') lambda]
+      |
+      #[a(href='#func-application') func-application]
+      |
+      #[a(href='#func-composition') func-composition]
+      |
+      #[a(href='#array-func') array-func]
+      |
+      #[a(href='#array-enum') array-enum]
+      |
+      #[a(href='#array-concat') array-concat]
+      |
+      #[a(href='#array-application') array-application]
+      |
+      #[a(href='#array-size') array-size]
+      |
+      "(" #[a(href='#expr') expr] ")"
+      |
+      #[a(href='#let-expr') let-expr]
+      |
+      #[a(href='#where-expr') where-expr]
+      |
+      #[a(href='#id') id] "=" #[a(href='#expr') expr]
+  
+  #[a(name='unary-op') unary-op] = "!" | "-"
+  
+  #[a(name='binary-op') binary-op] =
+      "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" |
+      "+" | "-" | "*" | "/" | "//" | "%" | "^"
+  
+  #[a(name='conditional') conditional] = "if" #[a(href='#expr') expr] "then" #[a(href='#expr') expr] "else" #[a(href='#expr') expr]
+  
+  #[a(name='lambda') lambda] =
+      "\" #[a(href='#param-list') param-list] "->" #[a(href='#expr') expr]
+  
+  #[a(name='func-application') func-application] = #[a(href='#expr') expr] "(" #[a(href='#expr-list') expr-list] ")"
+  
+  #[a(name='func-composition') func-composition] = #[a(href='#expr') expr] "." #[a(href='#expr') expr]
+  
+  #[a(name='array-func') array-func] = "[" ( #[a(href='#array-bounds') array-bounds] ":" )? #[a(href='#index-mappings') index-mappings] "]"
+  
+  #[a(name='array-bounds') array-bounds] = #[a(href='#expr-list') expr-list]
+  
+  #[a(name='index-mappings') index-mappings] = #[a(href='#index-mapping') index-mapping] ( ";" #[a(href='#index-mapping') index-mapping] )*  ";"?
+  
+  #[a(name='index-mapping') index-mapping] =
+      #[a(href='#index-pattern') index-pattern] "->" #[a(href='#expr') expr]
+      |
+      #[a(href='#index-pattern') index-pattern] ( "|" #[a(href='#index-guard') index-guard] "->" #[a(href='#expr') expr] )* "|" #[a(href='#expr') expr]
+  
+  #[a(name='index-pattern') index-pattern] = #[a(href='#index-pattern-elem') index-pattern-elem] ( "," #[a(href='#index-pattern-elem') index-pattern-elem] )*
+  
+  #[a(name='index-pattern-elem') index-pattern-elem] = #[a(href='#id') id] | #[a(href='#int') int]
+  
+  #[a(name='index-guard') index-guard] = #[a(href='#expr') expr]
+  
+  #[a(name='array-enum') array-enum] = "[" #[a(href='#array-enum-elem') array-enum-elem] ( ";" #[a(href='#array-enum-elem') array-enum-elem] )*  "]"
+  
+  #[a(name='array-enum-elem') array-enum-elem] = #[a(href='#expr') expr]
+  
+  #[a(name='array-concat') array-concat] = #[a(href='#expr') expr] "++" #[a(href='#expr') expr]
+  
+  #[a(name='array-application') array-application] = #[a(href='#array-app-object') array-app-object] "[" #[a(href='#expr-list') expr-list] "]"
+  
+  #[a(name='array-app-object') array-app-object] = #[a(href='#expr') expr] | "this"
+  
+  #[a(name='array-size') array-size] = "#" #[a(href='#array-size-object') array-size-object] ( "@" #[a(href='#array-size-dim') array-size-dim] )?
+  
+  #[a(name='array-size-object') array-size-object] = #[a(href='#expr') expr]
+  
+  #[a(name='array-size-dim') array-size-dim] = #[a(href='#expr') expr]
+  
+  #[a(name='let-expr') let-expr] =
+      "let" #[a(href='#value-decl') value-decl] "in" #[a(href='#expr') expr]
+      |
+      "let" "{" #[a(href='#local-decls') local-decls] "}" "in" #[a(href='#expr') expr]
+  
+  #[a(name='where-expr') where-expr] =
+      #[a(href='#expr') expr] "where" #[a(href='#value-decl') value-decl]
+      |
+      #[a(href='#expr') expr] "where" "{" #[a(href='#local-decls') local-decls] "}"
+  
+  #[a(name='expr-list') expr-list] = #[a(href='#expr') expr] ( "," #[a(href='#expr') expr] )*
+  
+  #[a(name='id') id] = [a-zA-Z] [a-zA-Z0-9_]*
+  
+  #[a(name='qualified-id') qualified-id] = #[a(href='#id') id] "." #[a(href='#id') id]
+  
+  #[a(name='literal') literal] = #[a(href='#int') int] | #[a(href='#real') real] | #[a(href='#complex') complex] | #[a(href='#boolean') boolean]
+  
+  #[a(name='infinity') infinity] = "~"
+  
+  #[a(name='int') int] = [0-9]+
+  
+  #[a(name='real') real] = [0-9]+ "." [0-9]+
+  
+  #[a(name='complex') complex] = [0-9]+ ( "." [0-9]+ )? "i"
+  
+  #[a(name='boolean') boolean] = "true" | "false"

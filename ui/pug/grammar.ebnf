@@ -1,0 +1,151 @@
+
+module = module-decl? imports declarations
+
+module-decl = "module" id ";"
+
+imports = import-decl*
+
+import-decl = "import" id ( "as" id )? ";"
+
+declarations = ( declaration ( ";" declaration )* )? ";"?
+
+declaration = input-decl | external-decl | local-decl
+
+input-decl = "input" id "::" type
+
+external-decl = "external" id "::" type
+
+local-decl = type-decl | value-decl
+
+local-decls = local-decl ( ";" declaration )*
+
+type-decl = id "::" type
+
+value-decl = id ( "(" param-list ")" )? "=" expr
+
+param-list = id ( "," id )*
+
+type = data-type | function-type
+
+data-type = array-type | primitive-type
+
+array-type = "[" expr-list "]" primitive-type
+
+primitive-type = id
+
+function-type = data-type ( "," data-type ) "->" data-type
+
+expr =
+    id
+    |
+    qualified-id
+    |
+    literal
+    |
+    infinity
+    |
+    unary-op expr
+    |
+    expr binary-op expr
+    |
+    conditional
+    |
+    lambda
+    |
+    func-application
+    |
+    func-composition
+    |
+    array-func
+    |
+    array-enum
+    |
+    array-concat
+    |
+    array-application
+    |
+    array-size
+    |
+    "(" expr ")"
+    |
+    let-expr
+    |
+    where-expr
+    |
+    id "=" expr
+
+unary-op = "!" | "-"
+
+binary-op =
+    "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" |
+    "+" | "-" | "*" | "/" | "//" | "%" | "^"
+
+conditional = "if" expr "then" expr "else" expr
+
+lambda =
+    "\" param-list "->" expr
+
+func-application = expr "(" expr-list ")"
+
+func-composition = expr "." expr
+
+array-func = "[" ( array-bounds ":" )? index-mappings "]"
+
+array-bounds = expr-list
+
+index-mappings = index-mapping ( ";" index-mapping )*  ";"?
+
+index-mapping =
+    index-pattern "->" expr
+    |
+    index-pattern ( "|" index-guard "->" expr )* "|" expr
+
+index-pattern = index-pattern-elem ( "," index-pattern-elem )*
+
+index-pattern-elem = id | int
+
+index-guard = expr
+
+array-enum = "[" array-enum-elem ( ";" array-enum-elem )*  "]"
+
+array-enum-elem = expr
+
+array-concat = expr "++" expr
+
+array-application = array-app-object "[" expr-list "]"
+
+array-app-object = expr | "this"
+
+array-size = "#" array-size-object ( "@" array-size-dim )?
+
+array-size-object = expr
+
+array-size-dim = expr
+
+let-expr =
+    "let" value-decl "in" expr
+    |
+    "let" "{" local-decls "}" "in" expr
+
+where-expr =
+    expr "where" value-decl
+    |
+    expr "where" "{" local-decls "}"
+
+expr-list = expr ( "," expr )*
+
+id = [a-zA-Z] [a-zA-Z0-9_]*
+
+qualified-id = id "." id
+
+literal = int | real | complex | boolean
+
+infinity = "~"
+
+int = [0-9]+
+
+real = [0-9]+ "." [0-9]+
+
+complex = [0-9]+ ( "." [0-9]+ )? "i"
+
+boolean = "true" | "false"

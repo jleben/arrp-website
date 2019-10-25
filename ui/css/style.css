@@ -1,0 +1,107 @@
+
+body { margin: 0px }
+
+#header { background-color: #000066; padding: 10px }
+
+#header-content {
+  max-width: 800px;
+  width: 100%;
+  margin: auto;
+}
+
+#header {
+  font-family: 'Share Tech', sans-serif;
+  font-size: 30;
+  color: #ffffff
+}
+
+#header a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+#header #menu-intro {
+  display: inline;
+}
+
+#header #menu-outro {
+  display: inline;
+}
+
+#header #menu {
+  display: inline;
+  padding: 10px;
+  font-size: 26;
+  list-style-type: none;
+  color: #ccccff;
+}
+
+#header #menu li { display: inline; margin: 10px }
+
+#page {
+  padding: 10px;
+}
+
+#page-content {
+  max-width: 800px;
+  width: 100%;
+  margin: auto;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12pt;
+}
+
+#page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 20pt; color: #000066 }
+#page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 14pt; color: #000066 }
+#page-content a  { text-decoration: none; color: #000066 }
+
+#page-content table, th, td {
+  border: 1px solid rgb(200,200,200);
+}
+
+#page-content td {
+  padding: 4px
+}
+
+#page-content table {
+  border-collapse: collapse;
+}
+
+
+#page-content code {
+  background-color: rgb(230,230,230);
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#page-content pre {
+  background-color: rgb(250,250,250);
+  //border-color: rgb(100,100,100);
+  border: 1px solid rgb(200,200,200);
+  padding: 10px;
+  border-radius: 7px;
+}
+
+#arrp-input {
+  width: 100%;
+}
+
+#arrp-output {
+  width: 100%;
+}
+
+#cpp-code {
+  width: 100%;
+}
+
+.bigger {
+  font-family: 'Share Tech', sans-serif;
+  font-size: 16pt;
+}
+
+.citation {
+  margin-bottom: 2em;
+}
+
+.citation p {
+  margin: 0.1em;
+}

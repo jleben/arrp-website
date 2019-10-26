@@ -1,0 +1,8 @@
+FROM node:10
+RUN npm install -g pug pug-cli jstransformer-markdown-it
+
+# Using entrypoint doesn't work for some reason - just hangs when container starts:
+#ENTRYPOINT /usr/local/bin/pug
+#CMD ['--version']
+
+CMD pug --version

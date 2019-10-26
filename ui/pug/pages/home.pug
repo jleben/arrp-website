@@ -13,40 +13,43 @@ block content
 
   h1 Features
 
-  p
+  table(id='examples-table')
+    tr
+      td(class='description')
+        p Write code like you write the math - using the same equations
+      td(class='code')
+        pre.
+          y[0] = 0;
+          y[n] = a*x[n] + (1-a)*y[n-1];
+    tr
+      td(class='description')
+        p Work with signals at different rates
+      td(class='code')
+        pre.
+          y[n] = x[n*hop]
 
-    p Write code like you write the math - using the same equations:
+    tr
+      td(class='description')
+        p Work with multi-dimensional streams
+      td(class='code')
+        pre.
+          y[n,k] = x[n+k] * w[k]
 
-    pre.
-      y[0] = 0;
-      y[n] =  a*x[n] + (1-a)*y[n-1];
+    tr
+      td(class='description')
+        p Do math with entire signals
+      td(class='code')
+        pre.
+          x[n] = n;
+          y = sin(x/100*2*pi) * 0.5;
+    tr
+      td(class='description')
+        p Define generic functions with other functions as parameters
+      td(class='code')
+        pre.
+          apply_to_pairs(x, f) = y where
+              y[t] = f(x[t], x[t+1]);
 
+          mean(a, b) = (a + b)/2;
 
-  p Work with signals at different rates:
-
-  pre.
-    y[n] = x[n*hop]
-
-
-  p Work with multi-dimensional streams:
-
-  pre.
-    y[n,k] = x[n+k] * w[k]
-
-
-  p Do math with entire signals:
-
-  pre.
-    x[n] = n/100*2*pi;
-    y = sin(x) * 0.5;
-
-
-  p Define generic functions with other functions as parameters:
-
-  pre.
-    mean(a, b) = (a + b)/2;
-
-    apply_to_pairs(x, f) = y where
-        y[t] = f(x[t], x[t+1]);
-
-    output = apply_to_pairs(input, mean);
+          output = apply_to_pairs(input, mean);

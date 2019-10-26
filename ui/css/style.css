@@ -54,6 +54,10 @@ body { margin: 0px }
 #page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 14pt; color: #000066 }
 #page-content a  { text-decoration: none; color: #000066 }
 
+#page-content table {
+  border-collapse: collapse;
+}
+
 #page-content table, th, td {
   border: 1px solid rgb(200,200,200);
 }
@@ -61,11 +65,6 @@ body { margin: 0px }
 #page-content td {
   padding: 4px
 }
-
-#page-content table {
-  border-collapse: collapse;
-}
-
 
 #page-content code {
   background-color: rgb(230,230,230);
@@ -80,6 +79,52 @@ body { margin: 0px }
   padding: 10px;
   border-radius: 7px;
 }
+
+
+#page-content #examples-table {
+  border: none;
+  font-size: 12pt;
+}
+
+#page-content #examples-table tr {
+}
+
+#page-content #examples-table td {
+  border: none;
+  //border-bottom:1pt solid rgb(150,150,150);
+  border-bottom: 3pt solid white;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+#page-content #examples-table .description {
+  background-color: #edf2ff;
+  color: #000066;
+  //background-color: #000088;
+  //color: #ffffff;
+  text-align: center;
+  border-right:1pt solid rgb(150,150,150);
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+
+#page-content #examples-table .description div {
+    //background-color: #edf2ff;
+}
+
+#page-content #examples-table .code {
+  //background-color: rgb(252,252,252);
+  //background-color: none;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+#page-content #examples-table .code pre {
+  background: none;
+  border: none;
+}
+
+
 
 #arrp-input {
   width: 100%;

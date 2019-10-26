@@ -50,7 +50,7 @@ body { margin: 0px }
   font-size: 12pt;
 }
 
-#page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 20pt; color: #000066 }
+#page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 20pt; color: #000066; margin-bottom: 17pt }
 #page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 14pt; color: #000066 }
 #page-content a  { text-decoration: none; color: #000066 }
 
@@ -103,7 +103,7 @@ body { margin: 0px }
   //background-color: #000088;
   //color: #ffffff;
   text-align: center;
-  border-right:1pt solid rgb(150,150,150);
+  border-right: 1pt solid rgb(150,150,150);
   padding-top: 3em;
   padding-bottom: 3em;
 }
@@ -124,7 +124,32 @@ body { margin: 0px }
   border: none;
 }
 
+#page-content .button-link {
+  //font-family: 'Open Sans', sans-serif;
+  //font-size: 12pt;
+  white-space: nowrap;
+  text-decoration: none;
+  border: 1pt solid rgb(150,150,150);
+  border-radius: 5px;
+  //background-color: #000066;
+  background-color: #edf2ff;
+  //color: #ffffff;
+  padding: 10pt;
+  padding-left: 20pt;
+  padding-right: 20pt;
+  margin-left: 10pt;
+  margin-right: 10pt;
+}
 
+#page-content .button-link:hover {
+  background-color: #d2ddfa
+}
+
+.buttons {
+  margin-top: 40pt;
+  margin-bottom: 40pt;
+  //text-align: center;
+}
 
 #arrp-input {
   width: 100%;

@@ -2,18 +2,51 @@ extends ../main.pug
 
 block content
 
-  p(class='bigger').
-    Arrp is a functional language for digital signal processing
-    with the following features:
-  ul
-    li.
-      Signals regarded simply as multi-dimensional arrays with an infinite dimension.
-    li.
-      Pointwise operations and broadcasting.
-    li.
-      Polymorphic and higher order functions.
-    li.
-      Type inference.
-    li.
-      High performance for real-time DSP.
+  p.
+    Arrp is a functional language for digital signal processing that:
 
+  ul
+    li Makes it easy to turn mathematical equations into code.
+    li Supports multi-dimensional signals and signals with different rates.
+    li Enables powerful abstractions like polymorphic and higher-order functions.
+    li Translates into optimized C++ and executes very efficiently.
+
+  h1 Features
+
+  p
+
+    p Write code like you write the math - using the same equations:
+
+    pre.
+      y[0] = 0;
+      y[n] =  a*x[n] + (1-a)*y[n-1];
+
+
+  p Work with signals at different rates:
+
+  pre.
+    y[n] = x[n*hop]
+
+
+  p Work with multi-dimensional streams:
+
+  pre.
+    y[n,k] = x[n+k] * w[k]
+
+
+  p Do math with entire signals:
+
+  pre.
+    x[n] = n/100*2*pi;
+    y = sin(x) * 0.5;
+
+
+  p Define generic functions with other functions as parameters:
+
+  pre.
+    mean(a, b) = (a + b)/2;
+
+    apply_to_pairs(x, f) = y where
+        y[t] = f(x[t], x[t+1]);
+
+    output = apply_to_pairs(input, mean);

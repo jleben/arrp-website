@@ -1,0 +1,20 @@
+
+sample_rate = 48000;
+
+phase(freq) = y where {
+    y[0] = 0.0;
+    y[n] = wrap(y[n-1] + freq[n]);
+    wrap(x) = if x < 1.0 then x else x - 1.0;
+};
+
+sine(freq) = sin(phase(freq)*2*pi) where pi = atan(1) * 4;
+
+rate(hz) = hz/sample_rate;
+
+f = sine(rate(3)) * 50 + 300;
+
+main =  sine(rate(f));
+
+
+## ./arrp sound-gen.arrp --exec arrp-program --exec-io raw
+## ./arrp-program -n 48000 | ffmpeg -y -ac 1 -ar 48k -f f64le -i pipe:0 file:audio.wav

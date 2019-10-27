@@ -21,13 +21,13 @@ RUN mkdir poco/cmake-build && cd poco/cmake-build && \
 
 # Get arrp build dependencies
 
-RUN apk add autoconf automake libtool gmp-dev
+RUN apk add autoconf automake libtool gmp-dev python3
 
 # Get arrp repo
 
 RUN git clone https://github.com/jleben/arrp.git && \
     cd arrp && \
-    git checkout f61fff70a878fd0ae5989603c1e58d5978e51391 && \
+    git checkout ba5799c7b8286a5b4111c64047351c27b567c079 && \
     git submodule update --init --recursive
 
 # Build isl

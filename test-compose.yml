@@ -21,7 +21,7 @@ services:
             restart_policy:
                 condition: on-failure
             labels:
-                traefik.frontend.rule: "Host:arrp-lang.info"
+                traefik.frontend.rule: "Host:127.0.0.1"
                 traefik.port: 80
                 traefik.docker.network: traefik-net
     compiler:

@@ -1,5 +1,9 @@
 
-body { margin: 0px }
+body {
+  display: flex;
+  flex-flow: column;
+  margin: 0px
+}
 
 #header { background-color: #000066; padding: 10px }
 
@@ -39,15 +43,19 @@ body { margin: 0px }
 #header #menu li { display: inline; margin: 10px }
 
 #page {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column;
   padding: 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12pt;
 }
 
 #page-content {
+  flex-grow: 1;
   max-width: 800px;
   width: 100%;
   margin: auto;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12pt;
 }
 
 #page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 20pt; color: #000066; margin-bottom: 17pt }
@@ -148,19 +156,31 @@ body { margin: 0px }
 .buttons {
   margin-top: 40pt;
   margin-bottom: 40pt;
-  //text-align: center;
 }
 
-#arrp-input {
-  width: 100%;
+#playground {
+  flex: 1;
+  display: flex;
+  flex-flow: row;
+  align-items: stretch;
 }
 
-#arrp-output {
-  width: 100%;
+#playground .column {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column;
+  box-sizing: border-box;
+  padding: 5pt;
+  float: left;
 }
 
-#cpp-code {
-  width: 100%;
+#playground p {
+  margin-top: 2pt;
+  margin-bottom: 2pt;
+}
+
+#playground textarea {
+  resize: none;
 }
 
 .bigger {

@@ -86,6 +86,8 @@ public:
 private:
     struct Request
     {
+        string code;
+        string input;
         int program_out_count = 10;
     };
 
@@ -98,6 +100,7 @@ private:
     const fs::path cpp_source_path = output_path / "arrp_program.cpp";
     const fs::path cpp_compile_log_path = output_path / "cpp_compile_log.txt";
     const fs::path program_path = output_path / "program";
+    const fs::path program_in_path = output_path / "program_in.txt";
     const fs::path program_out_path = output_path / "program_out.txt";
 
     void handleRequest
@@ -109,10 +112,11 @@ private:
               HTTPServerResponse & response,
               const Poco::URI &);
 
+    Request parse_request(HTTPServerRequest & request);
     static Request parse_query(const Poco::URI &);
     void prepare_filesystem();
     static void ensure_empty_dir(const fs::path &);
-    void write_arrp_code(HTTPServerRequest & request);
+    void write_input_files(Request &);
     void compile_arrp_code();
     void compile_cpp_code();
     void run_program(int out_count);

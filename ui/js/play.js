@@ -113,16 +113,21 @@ function selectExample() {
   var key = document.getElementById("example-selection").value;
   var code = examples[key];
   //console.log("selected example = " + key);
-  document.getElementById("arrp-input").value = code;
+  document.getElementById("arrp-code").value = code;
 }
 
 function sendArrpInput() {
 
-  var text = document.getElementById("arrp-input").value;
-
-  var data = new Blob([text], {type: 'text/plain'});
-
+  var code = document.getElementById("arrp-code").value;
+  var input = document.getElementById("arrp-input").value;
   var out_count = document.getElementById("out-count").value;
+
+  var data = {
+      "code": code,
+      "input": input
+  };
+
+  var dataBlob = new Blob([JSON.stringify(data)], {type: 'application/json'});
 
   var post_url = "http://" + location.hostname + "/compiler";
 
@@ -150,8 +155,8 @@ function sendArrpInput() {
           processArrpResponse(xmlhttp.response);
       }
   };
-  xmlhttp.open("POST", post_url + "?out_count=" + out_count, true);
-  xmlhttp.send(data);
+  xmlhttp.open("POST", post_url, true);
+  xmlhttp.send(dataBlob);
   document.getElementById("arrp-output").value = "Waiting for response...";
   document.getElementById("cpp-code").value = "Waiting for response...";
 }

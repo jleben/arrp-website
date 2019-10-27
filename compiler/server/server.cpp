@@ -99,19 +99,61 @@ void Play_Handler::handleRequest(HTTPServerRequest &request, HTTPServerResponse 
     }
 }
 
-void Play_Handler::play(HTTPServerRequest & request,
-                        HTTPServerResponse & response,
+void Play_Handler::play(HTTPServerRequest & http_request,
+                        HTTPServerResponse & http_response,
                         const Poco::URI & uri)
 {
     using namespace Poco::Net;
 
-    auto play_request = parse_query(uri);
+    //auto play_request = parse_query(uri);
+    Request request = parse_request(http_request);
+    request.program_out_count = 1000;
     prepare_filesystem();
-    write_arrp_code(request);
+    write_input_files(request);
     compile_arrp_code();
-    compile_cpp_code();
-    run_program(play_request.program_out_count);
-    send_report(response);
+    //compile_cpp_code();
+    run_program(request.program_out_count);
+    send_report(http_response);
+}
+
+Play_Handler::Request Play_Handler::parse_request(HTTPServerRequest & http_request)
+{
+    auto & in = http_request.stream();
+
+    int limit_bytes = 512 * 1000;
+
+    string data;
+    vector<char> buffer(512);
+    while(in and data.size() < limit_bytes)
+    {
+        in.read(buffer.data(), 512);
+        int extracted_count = in.gcount();
+        data += string(buffer.data(), extracted_count);
+    }
+
+    if (data.size() >= limit_bytes and !in.eof())
+    {
+        throw Request_Error("Request data too big.");
+    }
+    if (!in and !in.eof())
+    {
+        throw Request_Error("Failed to read data.");
+    }
+
+    using nlohmann::json;
+
+    json data_json;
+
+    try { data_json = json::parse(data); }
+    catch (json::parse_error & e)
+    {
+        throw Request_Error("Data could not be parsed as JSON.");
+    }
+
+    Request request;
+    request.code = data_json["code"];
+    request.input = data_json["input"];
+    return request;
 }
 
 Play_Handler::Request Play_Handler::parse_query(const Poco::URI & uri)
@@ -184,46 +226,23 @@ void Play_Handler::ensure_empty_dir(const fs::path & dir)
     }
 }
 
-void Play_Handler::write_arrp_code(HTTPServerRequest & request)
+void Play_Handler::write_input_files(Request & request)
 {
     using namespace Poco::Net;
 
-    auto & in = request.stream();
-
-    ofstream code_file(arrp_source_path);
-    ofstream code_log_file(log_path / "program.arrp");
-
-    string buffer(1024, 0);
-
-    size_t max_file_size = 1024 * 1024;
-    size_t file_size = 0;
-
-    while(in && code_file && file_size < max_file_size)
+    auto write_file = [](const string & text, const string & path)
     {
-        in.read(&buffer[0], 1024);
+        ofstream file(path);
+        file << text << endl;
+        if (file.fail())
+        {
+            throw Error("Failed to write request data into file.");
+        }
+    };
 
-        size_t count = in.gcount();
-        if (count == 0)
-            break;
-
-        code_file.write(&buffer[0], count);
-        code_log_file.write(&buffer[0], count);
-
-        file_size += count;
-    }
-
-    if (in.fail() && !in.eof())
-    {
-        throw Error("Failed to read request body.");
-    }
-    if (code_file.fail())
-    {
-        throw Error("Failed to write code file.");
-    }
-    if (code_log_file.fail())
-    {
-        throw Error("Failed to write code file to log directory.");
-    }
+    write_file(request.code, arrp_source_path);
+    write_file(request.code, log_path / "program.arrp");
+    write_file(request.input, program_in_path);
 }
 
 void Play_Handler::compile_arrp_code()
@@ -231,10 +250,12 @@ void Play_Handler::compile_arrp_code()
     using namespace Poco::Net;
 
     ostringstream cmd;
-    cmd << options().data_path << "/bin/arrp"
+    cmd << "ARRP_HOME=" << options().data_path
+        << " " << options().data_path << "/bin/arrp"
         << " " << arrp_source_path
-        << " --cpp " << (cpp_source_path.parent_path() / cpp_source_path.stem())
-        << " --cpp-namespace arrp"
+        << " --exec " << program_path
+//        << " --cpp " << (cpp_source_path.parent_path() / cpp_source_path.stem())
+//        << " --cpp-namespace arrp"
         << " 2> " << arrp_compile_log_path;
 
     cerr << "Executing: " << cmd.str() << endl;
@@ -273,7 +294,8 @@ void Play_Handler::run_program(int out_count)
 
     ostringstream cmd;
     cmd << "./" << program_path
-        << " " << out_count
+        << " -n " << out_count
+        << " < " << program_in_path
         << " > " << program_out_path;
 
     cerr << "Executing: " << cmd.str() << endl;

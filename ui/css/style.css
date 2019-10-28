@@ -198,6 +198,10 @@ body {
   background-color: #d2ddfa
 }
 
+#playground button:focus {
+  outline: none;
+}
+
 #playground textarea {
   margin-top: 2pt;
   resize: none;

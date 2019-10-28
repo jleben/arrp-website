@@ -46,12 +46,13 @@ body {
   flex-grow: 1;
   display: flex;
   flex-flow: column;
-  padding: 10px;
   font-family: 'Open Sans', sans-serif;
   font-size: 12pt;
 }
 
 #page-content {
+  padding: 5pt;
+  padding-top: 2pt;
   flex-grow: 1;
   max-width: 800px;
   width: 100%;

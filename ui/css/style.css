@@ -5,11 +5,17 @@ body {
   margin: 0px
 }
 
-#header { background-color: #000066; padding: 10px }
+#header
+{
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  background-color: #000066; padding: 10px
+}
 
 #header-content {
-  max-width: 800px;
-  width: 100%;
+  max-width: 580pt;
+  flex-grow: 1;
   margin: auto;
 }
 
@@ -54,7 +60,7 @@ body {
   padding: 5pt;
   padding-top: 2pt;
   flex-grow: 1;
-  max-width: 800px;
+  max-width: 580pt;
   width: 100%;
   margin: auto;
 }

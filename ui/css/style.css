@@ -174,12 +174,32 @@ body {
   float: left;
 }
 
-#playground p {
-  margin-top: 2pt;
-  margin-bottom: 2pt;
+#playground .toolbar {
+  display: flex;
+  flex-flow: row;
+  /*justify-content: space-between;*/
+  align-items: flex-end;
+  min-height: 22pt;
+}
+
+#playground button {
+  text-decoration: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12pt;
+  border: 1pt solid rgb(150,150,150);
+  border-radius: 5px;
+  background-color: #edf2ff;
+  padding: 1pt;
+  padding-left: 20pt;
+  padding-right: 20pt;
+}
+
+#playground button:hover {
+  background-color: #d2ddfa
 }
 
 #playground textarea {
+  margin-top: 2pt;
   resize: none;
 }
 

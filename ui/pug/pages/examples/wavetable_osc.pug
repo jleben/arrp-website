@@ -1,0 +1,61 @@
+extends ../../default-page.pug
+
+block page-content
+  h1 Wavetable Oscillator
+
+  p.
+    The function 'osc' implements a wavetable oscillator with
+    a fixed table and supporting a variable frequency.
+
+  p.
+    With the help of 'ffmpeg', you can write the output of this program
+    into an audio file:
+
+  ol
+    li Save the code into a file 'program.arrp', then compile it:
+
+      pre arrp program.arrp --exec program --exec-io raw
+
+    li
+      | Run the program and pipe its output into 'ffmpeg' to write the audio file:
+
+      pre ./program | ffmpeg -y -t 1 -ac 1 -ar 44.1k -f f64le -i pipe:0 file:audio.wav
+
+      | If you want to use a different sample rate, change #[code sample_rate]
+      | variable in the code, and adjust the ffmpeg option #[code -ar].
+
+  p.
+    Implementation:
+
+  pre.
+    sample_rate = 44100;
+    freq = 500;
+    main = 0.1 * osc(table, freq/sample_rate);
+
+    table_size = 500;
+    table =
+        0.1 * harmonic(0, table_size) +
+        0.5 * harmonic(1, table_size) +
+        0.2 * harmonic(2, table_size) +
+        0.3 * harmonic(3, table_size);
+
+    harmonic(k,N) = [N: i -> sin(k*i/N*2*pi)];
+
+    osc(table, freq) =
+        [t -> interpolate(table, phase(freq)[t] * #table)];
+
+    interpolate(table, i) = table[i0] * (1-d) + table[i1] * d where
+    {
+        i0 =  int(i)    % #table;
+        i1 = (int(i)+1) % #table;
+        d  = i - floor(i);
+    };
+
+    phase(freq) = y where
+    {
+        y[0] = 0.0;
+        y[n] = wrap(y[n-1] + freq[n]);
+        wrap(x) = if x < 1.0 then x else x - 1.0;
+    };
+
+    pi = 4*atan(1);

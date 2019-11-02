@@ -1,0 +1,77 @@
+extends ../../default-page.pug
+
+block page-content
+  h1 Freeverb
+
+  p.
+    The function 'mono_freeverb' implements the Freeverb reverberation algorithm
+    for one channel of audio at 44.1kHz.
+
+  p.
+    With the help of 'ffmpeg', you can process an audio file through this program:
+
+  ol
+    li Save the code into a file 'program.arrp', then compile it:
+
+      pre arrp program.arrp --exec program --exec-io raw
+
+    li
+      | Run the program and pipe its input and output through 'ffmpeg':
+
+      pre
+        | ffmpeg -i input.wav -ar 44.1k -f f32le pipe:1 |
+        | ./program |
+        | ffmpeg -y -ac 1 -ar 44.1k -f f32le -i pipe:0 file:output.wav
+
+  p.
+    Implementation:
+
+  pre.
+    scaleroom = 0.28;
+    offsetroom = 0.7;
+    COMB_FEEDBACK = real32(0.5 * scaleroom + offsetroom);
+
+    scaledamp = 0.4;
+    COMB_DAMPING = real32(0.5 * scaledamp);
+
+    ALLPASS_FEEDBACK = real32(0.5);
+
+    input audio_in :: [~]real32;
+
+    main = mono_freeverb(audio_in);
+
+    delay(N,x) = [~: n
+        | n < N -> real32(0)
+        | x[n-N]
+    ];
+
+    lbcf(D,x) = y where {
+        y :: [~]real32;
+        y = delay(D, w * COMB_FEEDBACK + x);
+        w :: [~]real32;
+        w = delay(1,y) * (real32(1) - COMB_DAMPING) + delay(1,w) * COMB_DAMPING;
+    };
+
+    allpass_comb(D, x) = y where {
+        y = -ALLPASS_FEEDBACK * w1 + w2;
+        w2 :: [~]real32;
+        w1 :: [~]real32;
+        w2 = delay(D, w1);
+        w1 = w2 * ALLPASS_FEEDBACK + x;
+    };
+
+    mono_freeverb(x) = y0 where {
+        y0 = allpass_comb(225, y1);
+        y1 = allpass_comb(341, y2);
+        y2 = allpass_comb(441, y3);
+        y3 = allpass_comb(556, y4);
+        y4 =
+            lbcf(1116,x) +
+            lbcf(1188,x) +
+            lbcf(1277,x) +
+            lbcf(1356,x) +
+            lbcf(1422,x) +
+            lbcf(1491,x) +
+            lbcf(1557,x) +
+            lbcf(1617,x);
+    };

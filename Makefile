@@ -3,7 +3,7 @@
 VERSION=$(shell cat VERSION)
 
 .PHONY: all
-all: compiler ui
+all: compiler ui pug
 
 .PHONY: compiler
 compiler:
@@ -12,3 +12,7 @@ compiler:
 .PHONY: ui
 ui:
 	docker build -t jakobleben/arrp-web-ui:$(VERSION) ui
+
+.PHONY: pug
+pug:
+	docker build -t pug -f ui/pug-docker ui

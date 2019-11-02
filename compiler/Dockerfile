@@ -27,7 +27,7 @@ RUN apk add autoconf automake libtool gmp-dev python3
 
 RUN git clone https://github.com/jleben/arrp.git && \
     cd arrp && \
-    git checkout 9f43d9f4c7d43b30246c8c357c8a89cd02482282 && \
+    git checkout v1 && \
     git submodule update --init --recursive
 
 # Build isl
@@ -36,7 +36,7 @@ RUN cd arrp/extra/isl && \
     mkdir build && \
     ./autogen.sh && \
     ./configure --prefix=$(pwd)/build && \
-    make install
+    make -j4 install
 
 # Build arrp
 
@@ -44,7 +44,7 @@ RUN cd arrp/extra/isl && \
 # ENV CC=/usr/bin/clang CXX=/usr/bin/clang++
 
 RUN mkdir arrp/build && cd arrp/build && \
-    cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt/service/arrp .. && make install
+    cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt/service/arrp .. && make -j4 install
 
 
 # Build server
@@ -52,7 +52,7 @@ RUN mkdir arrp/build && cd arrp/build && \
 COPY . server/
 RUN mkdir server/build && cd server/build && \
     cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt/service .. && \
-    cmake --build . && make install .
+    cmake --build . && make -j4 install .
 
 
 # Compose service

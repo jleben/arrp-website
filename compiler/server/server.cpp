@@ -294,8 +294,9 @@ void Play_Handler::run_program(int out_count)
 
     ostringstream cmd;
     cmd << "./" << program_path
-        << " -n " << out_count
+        << " -f text "
         << " < " << program_in_path
+        << " | head -n " << out_count
         << " > " << program_out_path;
 
     cerr << "Executing: " << cmd.str() << endl;

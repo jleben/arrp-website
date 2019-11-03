@@ -1,6 +1,6 @@
-pi = 4*atan(1);
-
-harmonic(k,N) = [N: i -> sin(k*i/N*2*pi)];
+sample_rate = 44100;
+freq = 500;
+output audio_out = 0.1 * osc(table, freq/sample_rate);
 
 table_size = 500;
 table =
@@ -8,6 +8,11 @@ table =
     0.5 * harmonic(1, table_size) +
     0.2 * harmonic(2, table_size) +
     0.3 * harmonic(3, table_size);
+
+harmonic(k,N) = [N: i -> sin(k*i/N*2*pi)];
+
+osc(table, freq) =
+    [t -> interpolate(table, phase(freq)[t] * #table)];
 
 interpolate(table, i) = table[i0] * (1-d) + table[i1] * d where
 {
@@ -23,17 +28,4 @@ phase(freq) = y where
     wrap(x) = if x < 1.0 then x else x - 1.0;
 };
 
-osc(table, freq) =
-    [t -> interpolate(table, phase(freq)[t] * #table)];
-
-sample_rate = 48000;
-freq = 500;
-main = 0.1 * osc(table, freq/sample_rate);
-
-## To generate a Wave file with 1 second of the output at 48kHz:
-
-## 1. Save this code into a file 'program.arrp', then compile it:
-##     arrp program.arrp --exec program --exec-io raw
-
-## 2. Run the program and pipe its output into 'ffmpeg' to write the audio file:
-##     ./program | ffmpeg -y -t 1 -ac 1 -ar 48k -f f64le -i pipe:0 file:audio.wav
+pi = 4*atan(1);

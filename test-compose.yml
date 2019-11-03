@@ -3,10 +3,10 @@ services:
     pug:
         image: pug
         volumes:
-            - /home/jakob/code/arrp-website/ui/pug:/input
+            - /home/jakob/code/arrp-website/ui:/input
             - html:/output
         command:
-            "pug /input/pages --out /output -O \"{base_url: ''}\" --watch"
+            "pug /input/pug/pages --out /output -O \"{base_url: ''}\" --watch"
 
     ui:
         image: jakobleben/arrp-web-ui:1

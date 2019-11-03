@@ -1,5 +1,3 @@
-## NOTE: Assuming 'audio_in' is audio sampled at 44100 Hz
-
 scaleroom = 0.28;
 offsetroom = 0.7;
 COMB_FEEDBACK = real32(0.5 * scaleroom + offsetroom);
@@ -10,6 +8,7 @@ COMB_DAMPING = real32(0.5 * scaledamp);
 ALLPASS_FEEDBACK = real32(0.5);
 
 input audio_in :: [~]real32;
+output audio_out = mono_freeverb(audio_in);
 
 delay(N,x) = [~: n
     | n < N -> real32(0)
@@ -46,13 +45,3 @@ mono_freeverb(x) = y0 where {
         lbcf(1557,x) +
         lbcf(1617,x);
 };
-
-main = mono_freeverb(audio_in);
-
-## To generate a Wave file with 1 second of the output at 48kHz:
-
-## 1. Save this code into a file 'program.arrp', then compile it:
-##     arrp program.arrp --exec program --exec-io raw
-
-## 2. Run the program and pipe its input and output through 'ffmpeg':
-##    ffmpeg -i input.wav -ar 44.1k -f f32le pipe:1 | ./program | ffmpeg -y -ac 1 -ar 44.1k -f f32le -i pipe:0 file:output.wav

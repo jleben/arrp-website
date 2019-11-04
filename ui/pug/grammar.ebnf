@@ -27,7 +27,7 @@ func-decl = id "(" param-list ")" "=" expr
 
 value-decl = id "=" expr
 
-elem-value-decl = id "[" index-pattern "]"  "=" expr index-guard?
+elem-value-decl = id "[" index-pattern "]"  "=" expr ("for" index-guard)?
 
 param-list = id ( "," id )*
 

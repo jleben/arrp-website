@@ -66,8 +66,8 @@ body {
 }
 
 #page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 20pt; color: #000066; margin-bottom: 17pt }
-#page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 14pt; color: #000066 }
-#page-content a  { text-decoration: none; color: #000066 }
+#page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 15pt; color: #000066 }
+#page-content a  { text-decoration: none; color: #000066; font-weight: bold; }
 
 #page-content table {
   border-collapse: collapse;

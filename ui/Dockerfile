@@ -2,6 +2,7 @@
 FROM node:10 as builder
 RUN npm install -g pug pug-cli jstransformer-markdown-it
 COPY ./pug /opt/build/pug/
+COPY ./arrp-examples /opt/build/arrp-examples/
 # TODO: optional base url
 RUN pug /opt/build/pug/pages -O "{base_url: ''}" --out /opt/build/html
 

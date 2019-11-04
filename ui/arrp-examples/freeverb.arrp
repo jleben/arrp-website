@@ -7,7 +7,7 @@ COMB_DAMPING = real32(0.5 * scaledamp);
 
 ALLPASS_FEEDBACK = real32(0.5);
 
-input audio_in :: [~]real32;
+input audio_in : [~]real32;
 output audio_out = mono_freeverb(audio_in);
 
 delay(N,x) = [~: n

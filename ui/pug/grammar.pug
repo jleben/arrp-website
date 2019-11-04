@@ -1,152 +1,158 @@
-pre.
+pre#grammar.
   
-  #[a(name='module') module] = #[a(href='#module-decl') module-decl]? #[a(href='#imports') imports] #[a(href='#declarations') declarations]
+  #[a(name='module' class='symbol') module] = #[a(href='#module-decl' class='symbol') module-decl]? #[a(href='#imports' class='symbol') imports] #[a(href='#declarations' class='symbol') declarations]
   
-  #[a(name='module-decl') module-decl] = "module" #[a(href='#id') id] ";"
+  #[a(name='module-decl' class='symbol') module-decl] = "<span class='literal'>module</span>" #[a(href='#id' class='symbol') id] "<span class='literal'>;</span>"
   
-  #[a(name='imports') imports] = #[a(href='#import-decl') import-decl]*
+  #[a(name='imports' class='symbol') imports] = #[a(href='#import-decl' class='symbol') import-decl]*
   
-  #[a(name='import-decl') import-decl] = "import" #[a(href='#id') id] ( "as" #[a(href='#id') id] )? ";"
+  #[a(name='import-decl' class='symbol') import-decl] = "<span class='literal'>import</span>" #[a(href='#id' class='symbol') id] ( "<span class='literal'>as</span>" #[a(href='#id' class='symbol') id] )? "<span class='literal'>;</span>"
   
-  #[a(name='declarations') declarations] = ( #[a(href='#declaration') declaration] ( ";" #[a(href='#declaration') declaration] )* )? ";"?
+  #[a(name='declarations' class='symbol') declarations] = ( #[a(href='#declaration' class='symbol') declaration] ( "<span class='literal'>;</span>" #[a(href='#declaration' class='symbol') declaration] )* )? "<span class='literal'>;</span>"?
   
-  #[a(name='declaration') declaration] = #[a(href='#input-decl') input-decl] | #[a(href='#external-decl') external-decl] | #[a(href='#local-decl') local-decl]
+  #[a(name='declaration' class='symbol') declaration] = #[a(href='#input-decl' class='symbol') input-decl] | #[a(href='#external-decl' class='symbol') external-decl] | #[a(href='#local-decl' class='symbol') local-decl]
   
-  #[a(name='input-decl') input-decl] = "input" #[a(href='#id') id] "::" #[a(href='#type') type]
+  #[a(name='input-decl' class='symbol') input-decl] = "<span class='literal'>input</span>" #[a(href='#type-decl' class='symbol') type-decl]
   
-  #[a(name='external-decl') external-decl] = "external" #[a(href='#id') id] "::" #[a(href='#type') type]
+  #[a(name='output-decl' class='symbol') output-decl] = "<span class='literal'>output</span>" (#[a(href='#id' class='symbol') id] | #[a(href='#type-decl' class='symbol') type-decl] | #[a(href='#value-decl' class='symbol') value-decl])
   
-  #[a(name='local-decl') local-decl] = #[a(href='#type-decl') type-decl] | #[a(href='#value-decl') value-decl]
+  #[a(name='external-decl' class='symbol') external-decl] = "<span class='literal'>external</span>" #[a(href='#type-decl' class='symbol') type-decl]
   
-  #[a(name='local-decls') local-decls] = #[a(href='#local-decl') local-decl] ( ";" #[a(href='#declaration') declaration] )*
+  #[a(name='local-decl' class='symbol') local-decl] = #[a(href='#type-decl' class='symbol') type-decl] | #[a(href='#value-decl' class='symbol') value-decl] | #[a(href='#elem-value-decl' class='symbol') elem-value-decl] | #[a(href='#func-decl' class='symbol') func-decl]
   
-  #[a(name='type-decl') type-decl] = #[a(href='#id') id] "::" #[a(href='#type') type]
+  #[a(name='local-decls' class='symbol') local-decls] = #[a(href='#local-decl' class='symbol') local-decl] ( "<span class='literal'>;</span>" #[a(href='#declaration' class='symbol') declaration] )*
   
-  #[a(name='value-decl') value-decl] = #[a(href='#id') id] ( "(" #[a(href='#param-list') param-list] ")" )? "=" #[a(href='#expr') expr]
+  #[a(name='type-decl' class='symbol') type-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>:</span>" #[a(href='#type' class='symbol') type]
   
-  #[a(name='param-list') param-list] = #[a(href='#id') id] ( "," #[a(href='#id') id] )*
+  #[a(name='func-decl' class='symbol') func-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>(</span>" #[a(href='#param-list' class='symbol') param-list] "<span class='literal'>)</span>" "<span class='literal'>=</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='type') type] = #[a(href='#data-type') data-type] | #[a(href='#function-type') function-type]
+  #[a(name='value-decl' class='symbol') value-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>=</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='data-type') data-type] = #[a(href='#array-type') array-type] | #[a(href='#primitive-type') primitive-type]
+  #[a(name='elem-value-decl' class='symbol') elem-value-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>[</span>" #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>]</span>"  "<span class='literal'>=</span>" #[a(href='#expr' class='symbol') expr] #[a(href='#index-guard' class='symbol') index-guard]?
   
-  #[a(name='array-type') array-type] = "[" #[a(href='#expr-list') expr-list] "]" #[a(href='#primitive-type') primitive-type]
+  #[a(name='param-list' class='symbol') param-list] = #[a(href='#id' class='symbol') id] ( "<span class='literal'>,</span>" #[a(href='#id' class='symbol') id] )*
   
-  #[a(name='primitive-type') primitive-type] = #[a(href='#id') id]
+  #[a(name='type' class='symbol') type] = #[a(href='#data-type' class='symbol') data-type] | #[a(href='#function-type' class='symbol') function-type]
   
-  #[a(name='function-type') function-type] = #[a(href='#data-type') data-type] ( "," #[a(href='#data-type') data-type] ) "->" #[a(href='#data-type') data-type]
+  #[a(name='data-type' class='symbol') data-type] = #[a(href='#array-type' class='symbol') array-type] | #[a(href='#primitive-type' class='symbol') primitive-type]
   
-  #[a(name='expr') expr] =
-      #[a(href='#id') id]
+  #[a(name='array-type' class='symbol') array-type] = "<span class='literal'>[</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>]</span>" #[a(href='#primitive-type' class='symbol') primitive-type]
+  
+  #[a(name='primitive-type' class='symbol') primitive-type] = #[a(href='#id' class='symbol') id]
+  
+  #[a(name='function-type' class='symbol') function-type] = #[a(href='#data-type' class='symbol') data-type] ( "<span class='literal'>,</span>" #[a(href='#data-type' class='symbol') data-type] ) "<span class='literal'>-></span>" #[a(href='#data-type' class='symbol') data-type]
+  
+  #[a(name='expr' class='symbol') expr] =
+      #[a(href='#id' class='symbol') id]
       |
-      #[a(href='#qualified-id') qualified-id]
+      #[a(href='#qualified-id' class='symbol') qualified-id]
       |
-      #[a(href='#literal') literal]
+      #[a(href='#literal' class='symbol') literal]
       |
-      #[a(href='#infinity') infinity]
+      #[a(href='#infinity' class='symbol') infinity]
       |
-      #[a(href='#unary-op') unary-op] #[a(href='#expr') expr]
+      #[a(href='#unary-op' class='symbol') unary-op] #[a(href='#expr' class='symbol') expr]
       |
-      #[a(href='#expr') expr] #[a(href='#binary-op') binary-op] #[a(href='#expr') expr]
+      #[a(href='#expr' class='symbol') expr] #[a(href='#binary-op' class='symbol') binary-op] #[a(href='#expr' class='symbol') expr]
       |
-      #[a(href='#conditional') conditional]
+      #[a(href='#conditional' class='symbol') conditional]
       |
-      #[a(href='#lambda') lambda]
+      #[a(href='#lambda' class='symbol') lambda]
       |
-      #[a(href='#func-application') func-application]
+      #[a(href='#func-application' class='symbol') func-application]
       |
-      #[a(href='#func-composition') func-composition]
+      #[a(href='#func-composition' class='symbol') func-composition]
       |
-      #[a(href='#array-func') array-func]
+      #[a(href='#array-func' class='symbol') array-func]
       |
-      #[a(href='#array-enum') array-enum]
+      #[a(href='#array-enum' class='symbol') array-enum]
       |
-      #[a(href='#array-concat') array-concat]
+      #[a(href='#array-concat' class='symbol') array-concat]
       |
-      #[a(href='#array-application') array-application]
+      #[a(href='#array-application' class='symbol') array-application]
       |
-      #[a(href='#array-size') array-size]
+      #[a(href='#array-size' class='symbol') array-size]
       |
-      "(" #[a(href='#expr') expr] ")"
+      "<span class='literal'>(</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>)</span>"
       |
-      #[a(href='#let-expr') let-expr]
+      #[a(href='#let-expr' class='symbol') let-expr]
       |
-      #[a(href='#where-expr') where-expr]
+      #[a(href='#where-expr' class='symbol') where-expr]
       |
-      #[a(href='#id') id] "=" #[a(href='#expr') expr]
+      #[a(href='#id' class='symbol') id] "<span class='literal'>=</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='unary-op') unary-op] = "!" | "-"
+  #[a(name='unary-op' class='symbol') unary-op] = "<span class='literal'>!</span>" | "<span class='literal'>-</span>"
   
-  #[a(name='binary-op') binary-op] =
-      "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" |
-      "+" | "-" | "*" | "/" | "//" | "%" | "^"
+  #[a(name='binary-op' class='symbol') binary-op] =
+      "<span class='literal'>||</span>" | "<span class='literal'>&&</span>" | "<span class='literal'>==</span>" | "<span class='literal'>!=</span>" | "<span class='literal'><</span>" | "<span class='literal'><=</span>" | "<span class='literal'>></span>" | "<span class='literal'>>=</span>" |
+      "<span class='literal'>+</span>" | "<span class='literal'>-</span>" | "<span class='literal'>*</span>" | "<span class='literal'>/</span>" | "<span class='literal'>//</span>" | "<span class='literal'>%</span>" | "<span class='literal'>^</span>"
   
-  #[a(name='conditional') conditional] = "if" #[a(href='#expr') expr] "then" #[a(href='#expr') expr] "else" #[a(href='#expr') expr]
+  #[a(name='conditional' class='symbol') conditional] = "<span class='literal'>if</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>then</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>else</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='lambda') lambda] =
-      "\" #[a(href='#param-list') param-list] "->" #[a(href='#expr') expr]
+  #[a(name='lambda' class='symbol') lambda] =
+      "<span class='literal'>\</span>" #[a(href='#param-list' class='symbol') param-list] "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='func-application') func-application] = #[a(href='#expr') expr] "(" #[a(href='#expr-list') expr-list] ")"
+  #[a(name='func-application' class='symbol') func-application] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>(</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>)</span>"
   
-  #[a(name='func-composition') func-composition] = #[a(href='#expr') expr] "." #[a(href='#expr') expr]
+  #[a(name='func-composition' class='symbol') func-composition] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>.</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-func') array-func] = "[" ( #[a(href='#array-bounds') array-bounds] ":" )? #[a(href='#index-mappings') index-mappings] "]"
+  #[a(name='array-func' class='symbol') array-func] = "<span class='literal'>[</span>" ( #[a(href='#array-bounds' class='symbol') array-bounds] "<span class='literal'>:</span>" )? #[a(href='#index-mappings' class='symbol') index-mappings] "<span class='literal'>]</span>"
   
-  #[a(name='array-bounds') array-bounds] = #[a(href='#expr-list') expr-list]
+  #[a(name='array-bounds' class='symbol') array-bounds] = #[a(href='#expr-list' class='symbol') expr-list]
   
-  #[a(name='index-mappings') index-mappings] = #[a(href='#index-mapping') index-mapping] ( ";" #[a(href='#index-mapping') index-mapping] )*  ";"?
+  #[a(name='index-mappings' class='symbol') index-mappings] = #[a(href='#index-mapping' class='symbol') index-mapping] ( "<span class='literal'>;</span>" #[a(href='#index-mapping' class='symbol') index-mapping] )*  "<span class='literal'>;</span>"?
   
-  #[a(name='index-mapping') index-mapping] =
-      #[a(href='#index-pattern') index-pattern] "->" #[a(href='#expr') expr]
+  #[a(name='index-mapping' class='symbol') index-mapping] =
+      #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr]
       |
-      #[a(href='#index-pattern') index-pattern] ( "|" #[a(href='#index-guard') index-guard] "->" #[a(href='#expr') expr] )* "|" #[a(href='#expr') expr]
+      #[a(href='#index-pattern' class='symbol') index-pattern] ( "<span class='literal'>|</span>" #[a(href='#index-guard' class='symbol') index-guard] "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr] )* "<span class='literal'>|</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='index-pattern') index-pattern] = #[a(href='#index-pattern-elem') index-pattern-elem] ( "," #[a(href='#index-pattern-elem') index-pattern-elem] )*
+  #[a(name='index-pattern' class='symbol') index-pattern] = #[a(href='#index-pattern-elem' class='symbol') index-pattern-elem] ( "<span class='literal'>,</span>" #[a(href='#index-pattern-elem' class='symbol') index-pattern-elem] )*
   
-  #[a(name='index-pattern-elem') index-pattern-elem] = #[a(href='#id') id] | #[a(href='#int') int]
+  #[a(name='index-pattern-elem' class='symbol') index-pattern-elem] = #[a(href='#id' class='symbol') id] | #[a(href='#int' class='symbol') int]
   
-  #[a(name='index-guard') index-guard] = #[a(href='#expr') expr]
+  #[a(name='index-guard' class='symbol') index-guard] = #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-enum') array-enum] = "[" #[a(href='#array-enum-elem') array-enum-elem] ( ";" #[a(href='#array-enum-elem') array-enum-elem] )*  "]"
+  #[a(name='array-enum' class='symbol') array-enum] = "<span class='literal'>[</span>" #[a(href='#array-enum-elem' class='symbol') array-enum-elem] ( "<span class='literal'>;</span>" #[a(href='#array-enum-elem' class='symbol') array-enum-elem] )*  "<span class='literal'>]</span>"
   
-  #[a(name='array-enum-elem') array-enum-elem] = #[a(href='#expr') expr]
+  #[a(name='array-enum-elem' class='symbol') array-enum-elem] = #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-concat') array-concat] = #[a(href='#expr') expr] "++" #[a(href='#expr') expr]
+  #[a(name='array-concat' class='symbol') array-concat] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>++</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-application') array-application] = #[a(href='#array-app-object') array-app-object] "[" #[a(href='#expr-list') expr-list] "]"
+  #[a(name='array-application' class='symbol') array-application] = #[a(href='#array-app-object' class='symbol') array-app-object] "<span class='literal'>[</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>]</span>"
   
-  #[a(name='array-app-object') array-app-object] = #[a(href='#expr') expr] | "this"
+  #[a(name='array-app-object' class='symbol') array-app-object] = #[a(href='#expr' class='symbol') expr] | "<span class='literal'>this</span>"
   
-  #[a(name='array-size') array-size] = "#" #[a(href='#array-size-object') array-size-object] ( "@" #[a(href='#array-size-dim') array-size-dim] )?
+  #[a(name='array-size' class='symbol') array-size] = "<span class='literal'>#</span>" #[a(href='#array-size-object' class='symbol') array-size-object] ( "<span class='literal'>@</span>" #[a(href='#array-size-dim' class='symbol') array-size-dim] )?
   
-  #[a(name='array-size-object') array-size-object] = #[a(href='#expr') expr]
+  #[a(name='array-size-object' class='symbol') array-size-object] = #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-size-dim') array-size-dim] = #[a(href='#expr') expr]
+  #[a(name='array-size-dim' class='symbol') array-size-dim] = #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='let-expr') let-expr] =
-      "let" #[a(href='#value-decl') value-decl] "in" #[a(href='#expr') expr]
+  #[a(name='let-expr' class='symbol') let-expr] =
+      "<span class='literal'>let</span>" #[a(href='#local-decl' class='symbol') local-decl] "<span class='literal'>in</span>" #[a(href='#expr' class='symbol') expr]
       |
-      "let" "{" #[a(href='#local-decls') local-decls] "}" "in" #[a(href='#expr') expr]
+      "<span class='literal'>let</span>" "<span class='literal'>{</span>" #[a(href='#local-decls' class='symbol') local-decls] "<span class='literal'>}</span>" "<span class='literal'>in</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='where-expr') where-expr] =
-      #[a(href='#expr') expr] "where" #[a(href='#value-decl') value-decl]
+  #[a(name='where-expr' class='symbol') where-expr] =
+      #[a(href='#expr' class='symbol') expr] "<span class='literal'>where</span>" #[a(href='#local-decl' class='symbol') local-decl]
       |
-      #[a(href='#expr') expr] "where" "{" #[a(href='#local-decls') local-decls] "}"
+      #[a(href='#expr' class='symbol') expr] "<span class='literal'>where</span>" "<span class='literal'>{</span>" #[a(href='#local-decls' class='symbol') local-decls] "<span class='literal'>}</span>"
   
-  #[a(name='expr-list') expr-list] = #[a(href='#expr') expr] ( "," #[a(href='#expr') expr] )*
+  #[a(name='expr-list' class='symbol') expr-list] = #[a(href='#expr' class='symbol') expr] ( "<span class='literal'>,</span>" #[a(href='#expr' class='symbol') expr] )*
   
-  #[a(name='id') id] = [a-zA-Z] [a-zA-Z0-9_]*
+  #[a(name='id' class='symbol') id] = [<span class='literal'>a-zA-Z</span>] [<span class='literal'>a-zA-Z0-9_</span>]*
   
-  #[a(name='qualified-id') qualified-id] = #[a(href='#id') id] "." #[a(href='#id') id]
+  #[a(name='qualified-id' class='symbol') qualified-id] = #[a(href='#id' class='symbol') id] "<span class='literal'>.</span>" #[a(href='#id' class='symbol') id]
   
-  #[a(name='literal') literal] = #[a(href='#int') int] | #[a(href='#real') real] | #[a(href='#complex') complex] | #[a(href='#boolean') boolean]
+  #[a(name='literal' class='symbol') literal] = #[a(href='#int' class='symbol') int] | #[a(href='#real' class='symbol') real] | #[a(href='#complex' class='symbol') complex] | #[a(href='#boolean' class='symbol') boolean]
   
-  #[a(name='infinity') infinity] = "~"
+  #[a(name='infinity' class='symbol') infinity] = "<span class='literal'>~</span>"
   
-  #[a(name='int') int] = [0-9]+
+  #[a(name='int' class='symbol') int] = [<span class='literal'>0-9</span>]+
   
-  #[a(name='real') real] = [0-9]+ "." [0-9]+
+  #[a(name='real' class='symbol') real] = [<span class='literal'>0-9</span>]+ "<span class='literal'>.</span>" [<span class='literal'>0-9</span>]+
   
-  #[a(name='complex') complex] = [0-9]+ ( "." [0-9]+ )? "i"
+  #[a(name='complex' class='symbol') complex] = [<span class='literal'>0-9</span>]+ ( "<span class='literal'>.</span>" [<span class='literal'>0-9</span>]+ )? "<span class='literal'>i</span>"
   
-  #[a(name='boolean') boolean] = "true" | "false"
+  #[a(name='boolean' class='symbol') boolean] = "<span class='literal'>true</span>" | "<span class='literal'>false</span>"

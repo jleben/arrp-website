@@ -11,17 +11,23 @@ declarations = ( declaration ( ";" declaration )* )? ";"?
 
 declaration = input-decl | external-decl | local-decl
 
-input-decl = "input" id "::" type
+input-decl = "input" type-decl
 
-external-decl = "external" id "::" type
+output-decl = "output" (id | type-decl | value-decl)
 
-local-decl = type-decl | value-decl
+external-decl = "external" type-decl
+
+local-decl = type-decl | value-decl | elem-value-decl | func-decl
 
 local-decls = local-decl ( ";" declaration )*
 
-type-decl = id "::" type
+type-decl = id ":" type
 
-value-decl = id ( "(" param-list ")" )? "=" expr
+func-decl = id "(" param-list ")" "=" expr
+
+value-decl = id "=" expr
+
+elem-value-decl = id "[" index-pattern "]"  "=" expr index-guard?
 
 param-list = id ( "," id )*
 
@@ -123,12 +129,12 @@ array-size-object = expr
 array-size-dim = expr
 
 let-expr =
-    "let" value-decl "in" expr
+    "let" local-decl "in" expr
     |
     "let" "{" local-decls "}" "in" expr
 
 where-expr =
-    expr "where" value-decl
+    expr "where" local-decl
     |
     expr "where" "{" local-decls "}"
 

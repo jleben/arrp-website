@@ -226,3 +226,16 @@ body {
 .citation p {
   margin: 0.1em;
 }
+
+#grammar {
+  color: rgb(100,100,100);
+}
+
+#grammar .symbol {
+  font-style: italic;
+}
+
+#grammar .literal {
+  font-weight: bold;
+  color: black;
+}

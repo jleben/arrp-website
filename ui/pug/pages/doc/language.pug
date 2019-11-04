@@ -10,7 +10,7 @@ block page-content
   h1 Arrp Language Guide
 
   p.
-    This document walks through the syntactical elements of an Arrp program, and describes their semantics.
+    This document describes the structure and meaning of an Arrp program.
 
   p.
     See also the #[a(href=base_url+'/doc/syntax') Formal syntax specification]. This document
@@ -23,7 +23,7 @@ block page-content
     li: a(href='#input-output') Input and output
     li: a(href='#value-decl') Values and functions
     li: a(href='#extern-decl') External functions
-    li: a(href='#arrays') Arrays
+    li: a(href='#arrays') Arrays and streams
     li: a(href='#primitive-values') Primitive values
     li: a(href='#built-in-ops') Built-in operations and functions
     li: a(href='#pointwise-ops') Pointwise operations and broadcasting
@@ -36,31 +36,26 @@ block page-content
     to the compiler through standard input.
 
   p.
-    A module consists of different kinds of declarations:
+    A module consists of different kinds of declarations (all optional):
 
   ul
     li A declaration of the module name
     li Declarations of imported modules
-    li Declarations of #[a(href='#input-output') input values]
-    li Declarations of #[a(href='#value-decl') named values and functions]
-    li Declarations of #[a(href='#type-decl') types of those names]
+    li Declarations of #[a(href='#input-output') input and output values]
+    li Declarations of #[a(href='#value-decl') other named values and functions]
     li Declarations of #[a(href='#extern-decl') external functions]
 
   p See #[a(href=ref_grammar('module')) Grammar: module].
 
+  p.
+    Here is a simple complete module that takes a stream of integers as input,
+    multiplies each integer by 2 and outputs a stream of resulting values:
+
   pre.
       module example;
 
-      import lib;
-
-      input iota :: int;
-
-      external eta :: int -> real64;
-
-      gamma(x) = x + 1;
-
-      main :: real64;
-      main = lib.alpha(1) + eta(2) - gamma(iota);
+      input x : [~]int;
+      output y = x * 2;
 
   h2 Default module name
 
@@ -71,44 +66,57 @@ block page-content
   h2 Imported modules
 
   p.
-    A module import declaration causes the imported module to be compiled,
+    A #[a(href=ref_grammar('import-decl')) module import declaration]
+    causes the imported module to be compiled,
     and the global names in that module become available in the current
     module.
+
+  p.
+    When importing the module using #[code import lib], a value named #[code x] becomes
+    available as #[code lib.x] (see #[a(href=ref_grammar('qualified-id')) Grammar: qualified-id]).
+
+  p.
+    We can also import a module under and alias using #[code import lib as alias]
+    by which a value #[code x] in the module becomes available as #[code alias.x].
 
   p.
      The imported module must reside in a file named "module-name.arrp".
      The file must either be adjacent to the location of the importing module,
      or in one of the #[i import directories] given as an option to the compiler.
 
-  h2 Using names from imported modules
-
-  p.
-    The names in the imported module are available in the importing module
-    using qualified identifiers
-    (see #[a(href=ref_grammar('qualified-id')) Grammar: qualified-id]):
-
   h1: a(name='input-output') Input and output
 
   p.
-    The output of an Arrp program is the value of the global name "main",
-    which must be present.
-
-  p.
-    Inputs must be explicitly declared, along with their type
-    (see !{grammar_ref('inputs','Grammar: inputs')}).
-
-  p.
-    In the
-    following example, two inputs are declared: an integer named "a" and
-    an array named "b" with 64-bit floating point elements and two dimensions
-    - the first infinite and the second of size 10:
+    An #[a(href=ref_grammar('input-decl')) input declaration] declares
+    an input, assigning it a name and a type.
+    For example, the following declares an input named #[code x]
+    as a stream of 64 bit real values:
 
   pre.
-    input a :: int;
-    input b :: [~,10]real64;
+    input x : [~]real64
 
   p.
-    How input and output data is exchanged with the environment depends
+    The output is declared using an
+    #[a(href=ref_grammar('output-decl')) output declaration] which
+    can simply mark a name as an output or also specify its
+    value or type. For example, any of the following lines declares the value
+    named #[code y] to be the output:
+
+  pre.
+    output y;
+    output y = x * 2;
+    output y : [~]int;
+
+  p.
+    If the value of the output is not provided in the output declaration,
+    it must be defined separately, for example:
+
+  pre.
+    output y;
+    y = x * 2;
+
+  p.
+    The way that input and output data is exchanged with the environment depends
     on the target form of compilation. See also the page on the
     #[a(href=base_url+'/doc/target-cpp') C++ target].
 
@@ -127,7 +135,7 @@ block page-content
 
     a = area_of_right_triangle(10, 5);
 
-  p See #[a(href=ref_grammar('value-decl')) Grammar: value-decl]
+  p See Grammar: #[a(href=ref_grammar('value-decl')) value-decl], #[a(href=ref_grammar('func-decl')) func-decl]
 
   p.
     The scope of globally declared names is the entire module. They are mutually recursive.
@@ -186,7 +194,7 @@ block page-content
     for a name:
 
   pre.
-    y :: real64;
+    y : real64;
     y = 1 + f(x);
 
   p.
@@ -204,11 +212,6 @@ block page-content
     of functional recursion can be achieved with recursive arrays.
     See #[a(href='#recursive-arrays') Recursive arrays].
 
-  p.
-    Due to a current limitation, the Arrp compiler requires
-    a #[a(href='#type-decl') type annotation] for
-    at least one name in any recursive set of names.
-
 
   h1: a(name='extern-decl') External functions
 
@@ -218,7 +221,7 @@ block page-content
     except that it is not polymorphic:
 
   pre.
-    external transform :: [100]real64 -> [50]real64;
+    external transform : [100]real64 -> [50]real64;
     x = [100: i -> sin(i/100)];
     y = transform(x);
 
@@ -230,116 +233,131 @@ block page-content
     on the target form of compilation. See also the page on the
     #[a(href=base_url+'/doc/target-cpp') C++ target].
 
-  h1: a(name='arrays') Arrays
+  h1: a(name='arrays') Arrays and Streams
 
   p.
     Arrays are a special kind of functions that map integers
-    to values of some primitive type. Each formal parameter of such a function
-    also called a #[i dimension], and an actual parameter (argument) is
-    also called an #[i index]. A multi-parameter function is therefore a
+    to values of some primitive type.
+    Each formal parameter of such a function is also called a #[i dimension],
+    and an actual parameter (argument) is also called an #[i index].
+    A multi-parameter function is therefore a
     multi-dimensional array.
 
   p.
     An array dimension ranges from 0 up to (and excluding) some number
     called array size. However, the size of one dimension can be
-    infinite. Such an array is called a #[i signal].
+    infinite. Such an array is called a #[i stream].
 
   p.
     We represent a sequence of indices or array sizes for
     multiple dimensions with a tuple: #{'\<x,y,...\>'}.
 
-  h2 Array definition
+  p.
+    Arrays can be defined using equations or as part of an expression,
+    similar to the difference between a named function #[code f(x) = y]
+    and an unnamed one #[code \x -> y].
+
+  h2: a(name='array-equations') Array equations
 
   p.
-    An array can be defined with an expression that specifies
-    the array size and a list of mappings from indices to values
-    (see #[a(href=ref_grammar('array-func')) Grammar: array-func]):
+    An #[a(href=ref_grammar('elem-value-decl')) array equation]
+    defines values of array elements at particular indices.
+    In the following example, an array named #[code a]
+    is defined using two equations:
 
   pre.
-    a = [5,10:
-        x,0 -> 0;
-        x,y -> x/y;
-    ];
+    a[0] = 1;
+    a[i] = 1/i  for i < 10;
 
   p.
-    This is a 2-dimensional array with size #{'<5,10>'},
-    and it maps all indices where the second dimension
-    equals 0 to the value 0, and all other indices of form #{'<x,y>'}
-    to the value x/y.
-
-  h2 Signals
+    On the left side of an equation, each index can be given
+    a specific value (e.g. #[code 0])
+    or a name (e.g. #[code i]).
+    Named indices can be used in the value
+    on the right side of the equation and their range can be constrained
+    using further equations following the keyword #[code for].
+    Each index has an implicit lower bound of 0.
 
   p.
-    A signal (an infinite array) is defined by using #[code ~] in place
-    of the array size:
+    Multi-dimensional arrays are defined using additional indices:
 
   pre.
-    s = [#[b ~],5: t,i -> sin(t*i)];
+    a[x,y] = x+y  for x < 10 and y < 20;
 
   p.
-    Alternatively, an infinite array size is assumed when no size is given.
-    Mind that only a single infinite dimension is allowed:
+    The size of an array is the largest rectangle (or hyperrectangle)
+    containing all the indices mentioned in the equations.
+    It is an error if any indices in this rectangular area are undefined.
+    For example, the following equation defines a set of indices that do
+    not form a rectangle:
 
   pre.
-    s = [t -> sin(t)];
-
-  h2 Index patterns and guards
+    a[x,y] = x+y  for x < 10 and y < x; ... Error: Array is not rectangular.
 
   p.
-    Each index-value mapping begins with an #[i index pattern]
-    (see #[a(href=ref_grammar('index-mapping')) Grammar: index-mapping]).
-    Each pattern element is either a literal index value for
-    which the pattern is valid, or a name of a variable representing
-    any index value which can be used in the mapped expression.
-
-  p.
-    A mapping is only effective for indices not matched by
-    any pattern of the preceding mappings. Any index within the size
-    of the array must be matched by at least one pattern.
-
-  p.
-    An index mapping can be further split by #[i index guards]
-    (see #[a(href=ref_grammar('index-mapping')) Grammar: index-mapping]).
-    An index guard is a boolean expression on array index variables.
-    The mapped expression is effective only for indices where the
-    expression is true. Guarded expressions must be followed by an
-    expression without a guard that is effective for all indices
-    not matched by any guard.
-
-  p.
-    The following signal - defined using guards -
-    has every third element equal to 1, and all others equal to 0:
-
-  pre.
-    s = [t | t % 3 == 0 -> 1 | 0];
-
-  p.
-    A guarded mapping is only effective for indices matched by
-    its pattern, and not matched by guards and patterns of any
-    preceding mappings.
-
-  p.
-    An index guard must be a quasi-affine expression in index variables
+    An index constraint (following #[code for]) must be a quasi-affine expression in index variables
     and constant integers.
     This means it can only contain:
 
   ul
-    li Any constant integer expression.
+    li A constant integer expression.
     li Addition and subtraction of constants and variables.
     li Multiplication of a constant and a variable.
     li Division and modulo of a variable with a constant divisor.
 
+  h2 Array expressions
+
+  p.
+    An array can also be defined using an expression
+    which can be part of a larger expression.
+    In the following example, an array defined between the
+    brackets <code>[...]</code> is passed as an argument
+    to a function #[code f]:
+
+  pre.
+    a = f([5,10: x,y -> x+y])
+
+  p.
+    The part up to #[code :] specifies the size of
+    the array. The rest associates indices with values in
+    the same manner as an #[a(href='#array-equations') array equation],
+    except that the arrow #[code ->] is used in place of an equals sign.
+
+
+  h2 Streams
+
+  p.
+    A stream is defined using array equations that
+    leave the upper bound of an index undefined
+    (the lower bound of 0 is still implied):
+
+  pre.
+    s[i] = i * 2;
+
+  p.
+    A stream is also defined using an array expression by
+    using #[code ~] to denote an infinite dimension:
+
+  pre.
+    s = [~: i -> i * 2];
+
+  p.
+    Omitting array size altogether also implies infinite size:
+
+  pre.
+    s = [i -> i * 2];
+
   h2 Nested arrays
 
   p.
-    Array definitions can be nested, resulting in an array with combined
+    Array expressions can be nested, resulting in an array with combined
     dimensions:
 
   pre.
     a = [t -> [5: i -> sin(t*i)]];
 
   p.
-    The array "a" is a 2-dimensional array with size #{'<t, 5>'}.
+    The array "a" is a 2-dimensional array with size #{'<~, 5>'}.
 
   h2 Array application
 
@@ -362,22 +380,26 @@ block page-content
   h2: a(name='recursive-arrays') Recursive arrays
 
   p.
-    A recursive array is defined using the name bound to the
-    array expression inside the expression itself, or using the keyword
-    "this":
+    A recursive array is defined by using the array name in its own definition:
 
   pre.
-    a :: [~]real64;
-    a = [0 -> 0; t -> a[t-1] * 0.8];
-    b = [0 -> 0; t -> this[t-1] * 0.8];
+    a[0] = 0.0;
+    a[n] = a[n-1] * 0.8;
+
+  p.
+    A recursive array can also be defined using an expression by referring
+    to the array with the keyword #[code this]:
+
+  pre.
+    a = [0 -> 0.0; n -> this[n-1] * 0.8];
 
   p.
     Multiple arrays can be mutually recursive:
 
   pre.
-    a :: [~]real64;
-    a = [0 -> 0; t -> b[t-1] * 0.8];
-    b = [t -> a[t] + 1];
+    a[0] = 0.0;
+    a[n] = b[n-1] * 0.8;
+    b[n] = a[n] + 1;
 
   h2 Array enumeration
 
@@ -397,20 +419,6 @@ block page-content
 
   pre.
     a = [5: i -> i] ++ [10: i -> i^2];
-
-  p.
-    Combined with recursion:
-
-  pre.
-    a :: [~]int;
-    a = [0; 1] ++ [t -> a[t] * 2];
-
-  p.
-    Or shorter:
-
-  pre.
-    a :: [~]int;
-    a = [0; 1] ++ a*2;
 
   h1: a(name='primitive-values') Primitive values
 
@@ -587,7 +595,7 @@ block page-content
   p.
     For example, the function "f" can be applied to a primitive value (a), in which
     case !{'<code>k[t]</code>'} is a constant expression. But it can also be applied to
-    a signal (b) so that !{'<code>k[t]</code>'} is variable:
+    a stream (b) so that !{'<code>k[t]</code>'} is variable:
 
   pre.
     f(k) = [t -> sin(t * k[t])];
@@ -597,13 +605,11 @@ block page-content
   h2 Broadcasting in array definition
 
   p.
-    Broadcasting also applies to individual mappings in an array definition.
-    If the mapped values are arrays of different sizes, the result reuses
+    Broadcasting also applies to a set of array equations.
+    If the values on the right hand sides are arrays of different sizes, the result reuses
     values of arrays with smaller number of dimensions just like in a primitive
     operation:
 
   pre.
-    a = [
-      0 -> 1;
-      t -> [10: i -> t + i]
-    ];
+    a[0] = 1;
+    a[t] = [10: i -> t + i];

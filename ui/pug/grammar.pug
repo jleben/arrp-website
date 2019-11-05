@@ -28,7 +28,7 @@ pre#grammar.
   
   #[a(name='value-decl' class='symbol') value-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>=</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='elem-value-decl' class='symbol') elem-value-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>[</span>" #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>]</span>"  "<span class='literal'>=</span>" #[a(href='#expr' class='symbol') expr] ("<span class='literal'>for</span>" #[a(href='#index-guard' class='symbol') index-guard])?
+  #[a(name='elem-value-decl' class='symbol') elem-value-decl] = #[a(href='#id' class='symbol') id] "<span class='literal'>[</span>" #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>]</span>"  "<span class='literal'>=</span>" #[a(href='#array-values' class='symbol') array-values]
   
   #[a(name='param-list' class='symbol') param-list] = #[a(href='#id' class='symbol') id] ( "<span class='literal'>,</span>" #[a(href='#id' class='symbol') id] )*
   
@@ -100,18 +100,26 @@ pre#grammar.
   
   #[a(name='array-bounds' class='symbol') array-bounds] = #[a(href='#expr-list' class='symbol') expr-list]
   
-  #[a(name='index-mappings' class='symbol') index-mappings] = #[a(href='#index-mapping' class='symbol') index-mapping] ( "<span class='literal'>;</span>" #[a(href='#index-mapping' class='symbol') index-mapping] )*  "<span class='literal'>;</span>"?
+  #[a(name='index-mappings' class='symbol') index-mappings] = #[a(href='#index-mapping' class='symbol') index-mapping] ( "<span class='literal'>;</span>" #[a(href='#index-mapping' class='symbol') index-mapping] )* "<span class='literal'>;</span>"?
   
-  #[a(name='index-mapping' class='symbol') index-mapping] =
-      #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr]
-      |
-      #[a(href='#index-pattern' class='symbol') index-pattern] ( "<span class='literal'>|</span>" #[a(href='#index-guard' class='symbol') index-guard] "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr] )* "<span class='literal'>|</span>" #[a(href='#expr' class='symbol') expr]
+  #[a(name='index-mapping' class='symbol') index-mapping] =  #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>-></span>" #[a(href='#array-values' class='symbol') array-values]
   
   #[a(name='index-pattern' class='symbol') index-pattern] = #[a(href='#index-pattern-elem' class='symbol') index-pattern-elem] ( "<span class='literal'>,</span>" #[a(href='#index-pattern-elem' class='symbol') index-pattern-elem] )*
   
   #[a(name='index-pattern-elem' class='symbol') index-pattern-elem] = #[a(href='#id' class='symbol') id] | #[a(href='#int' class='symbol') int]
   
-  #[a(name='index-guard' class='symbol') index-guard] = #[a(href='#expr' class='symbol') expr]
+  #[a(name='array-values' class='symbol') array-values]  =
+      #[a(href='#expr' class='symbol') expr]
+      |
+      #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" #[a(href='#index-bounds' class='symbol') index-bounds]
+      |
+      "<span class='literal'>{</span>"      #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" #[a(href='#index-bounds' class='symbol') index-bounds]
+          ("<span class='literal'>;</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" #[a(href='#index-bounds' class='symbol') index-bounds])*
+          ("<span class='literal'>;</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" "<span class='literal'>otherwise</span>")?
+           "<span class='literal'>;</span>"?
+      "<span class='literal'>}</span>"
+  
+  #[a(name='index-bounds' class='symbol') index-bounds] = #[a(href='#expr' class='symbol') expr]
   
   #[a(name='array-enum' class='symbol') array-enum] = "<span class='literal'>[</span>" #[a(href='#array-enum-elem' class='symbol') array-enum-elem] ( "<span class='literal'>;</span>" #[a(href='#array-enum-elem' class='symbol') array-enum-elem] )*  "<span class='literal'>]</span>"
   

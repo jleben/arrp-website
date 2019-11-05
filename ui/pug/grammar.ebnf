@@ -27,7 +27,7 @@ func-decl = id "(" param-list ")" "=" expr
 
 value-decl = id "=" expr
 
-elem-value-decl = id "[" index-pattern "]"  "=" expr ("for" index-guard)?
+elem-value-decl = id "[" index-pattern "]"  "=" array-values
 
 param-list = id ( "," id )*
 
@@ -99,18 +99,26 @@ array-func = "[" ( array-bounds ":" )? index-mappings "]"
 
 array-bounds = expr-list
 
-index-mappings = index-mapping ( ";" index-mapping )*  ";"?
+index-mappings = index-mapping ( ";" index-mapping )* ";"?
 
-index-mapping =
-    index-pattern "->" expr
-    |
-    index-pattern ( "|" index-guard "->" expr )* "|" expr
+index-mapping =  index-pattern "->" array-values
 
 index-pattern = index-pattern-elem ( "," index-pattern-elem )*
 
 index-pattern-elem = id | int
 
-index-guard = expr
+array-values  =
+    expr
+    |
+    expr "," index-bounds
+    |
+    "{"      expr "," index-bounds
+        (";" expr "," index-bounds)*
+        (";" expr "," "otherwise")?
+         ";"?
+    "}"
+
+index-bounds = expr
 
 array-enum = "[" array-enum-elem ( ";" array-enum-elem )*  "]"
 

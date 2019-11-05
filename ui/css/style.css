@@ -233,6 +233,7 @@ body {
 
 #grammar .symbol {
   font-style: italic;
+  font-weight: normal;
 }
 
 #grammar .literal {

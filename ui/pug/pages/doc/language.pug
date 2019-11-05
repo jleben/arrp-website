@@ -249,7 +249,7 @@ block page-content
     infinite. Such an array is called a #[i stream].
 
   p.
-    We represent a sequence of indices or array sizes for
+    In this document, we represent a sequence of indices or array sizes for
     multiple dimensions with a tuple: #{'\<x,y,...\>'}.
 
   p.
@@ -260,42 +260,55 @@ block page-content
   h2: a(name='array-equations') Array equations
 
   p.
-    An #[a(href=ref_grammar('elem-value-decl')) array equation]
-    defines values of array elements at particular indices.
+    See #[a(href=ref_grammar('elem-value-decl')) Grammar: elem-value-decl].
+
+  p.
+    An array equation defines values of array elements at particular indices.
     In the following example, an array named #[code a]
     is defined using two equations:
 
   pre.
     a[0] = 1;
-    a[i] = 1/i  for i < 10;
+    a[n] = 1/n, if i < 10;
 
   p.
-    On the left side of an equation, each index can be given
+    On the left-hand side of an equation, each index can be given
     a specific value (e.g. #[code 0])
     or a name (e.g. #[code i]).
     Named indices can be used in the value
-    on the right side of the equation and their range can be constrained
-    using further equations following the keyword #[code for].
+    on the right-hand side of the equation and their range can be constrained
+    using equalities or inequalities following the keyword #[code if].
     Each index has an implicit lower bound of 0.
 
   p.
-    Multi-dimensional arrays are defined using additional indices:
+    The right hand side of an equation can have multiple parts
+    with different index constraints:
 
   pre.
-    a[x,y] = x+y  for x < 10 and y < 20;
+    a[n] = {
+        1, if n % 3 == 0;
+        0, otherwise
+    }
+
+  p.
+    Multi-dimensional arrays are defined by declaring multiple indices
+    on the left-hand side of the equation:
+
+  pre.
+    a[x,y] = x+y, if x < 10 and y < 20;
 
   p.
     The size of an array is the largest rectangle (or hyperrectangle)
-    containing all the indices mentioned in the equations.
+    containing all the indices defined by the equations.
     It is an error if any indices in this rectangular area are undefined.
     For example, the following equation defines a set of indices that do
     not form a rectangle:
 
   pre.
-    a[x,y] = x+y  for x < 10 and y < x; ... Error: Array is not rectangular.
+    a[x,y] = x+y, if x < 10 and y < x; ... Error: Array is not rectangular.
 
   p.
-    An index constraint (following #[code for]) must be a quasi-affine expression in index variables
+    An index constraint (following #[code if]) must be a quasi-affine expression in index variables
     and constant integers.
     This means it can only contain:
 
@@ -308,6 +321,9 @@ block page-content
   h2 Array expressions
 
   p.
+    See #[a(href=ref_grammar('array-func')) Grammar: array-func].
+
+  p.
     An array can also be defined using an expression
     which can be part of a larger expression.
     In the following example, an array defined between the
@@ -315,13 +331,13 @@ block page-content
     to a function #[code f]:
 
   pre.
-    a = f([5,10: x,y -> x+y])
+    r = f([5,10: x,y -> x+y])
 
   p.
-    The part up to #[code :] specifies the size of
-    the array. The rest associates indices with values in
-    the same manner as an #[a(href='#array-equations') array equation],
-    except that the arrow #[code ->] is used in place of an equals sign.
+    The optional part up to #[code :] explicitly specifies the size of
+    the array, removing the need to specify the size using index constraints.
+    The rest associates indices with values in
+    the same manner as an #[a(href='#array-equations') array equation].
 
 
   h2 Streams
@@ -363,7 +379,7 @@ block page-content
 
   p.
     An array is applied when followed by indices in square brackets
-    (see #[a(href=ref_grammar('array-applciation')) Grammar: array-application]):
+    (see #[a(href=ref_grammar('array-application')) Grammar: array-application]):
 
   pre.
     a = [5,10: x,y -> x+y];

@@ -116,13 +116,11 @@ array-values  =
 
 index-bounds = expr
 
-array-enum = "(" expr ( "," expr )* ")"
+array-enum = "(" expr-list ")"
 
 array-concat = expr "++" expr
 
-array-application = array-app-object "[" expr-list "]"
-
-array-app-object = expr | "this"
+array-application = expr "[" expr-list "]"
 
 array-size = "#" array-size-object ( "@" array-size-dim )?
 

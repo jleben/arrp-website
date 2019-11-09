@@ -117,13 +117,11 @@ pre#grammar.
   
   #[a(name='index-bounds' class='symbol') index-bounds] = #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-enum' class='symbol') array-enum] = "<span class='literal'>(</span>" #[a(href='#expr' class='symbol') expr] ( "<span class='literal'>,</span>" #[a(href='#expr' class='symbol') expr] )* "<span class='literal'>)</span>"
+  #[a(name='array-enum' class='symbol') array-enum] = "<span class='literal'>(</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>)</span>"
   
   #[a(name='array-concat' class='symbol') array-concat] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>++</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-application' class='symbol') array-application] = #[a(href='#array-app-object' class='symbol') array-app-object] "<span class='literal'>[</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>]</span>"
-  
-  #[a(name='array-app-object' class='symbol') array-app-object] = #[a(href='#expr' class='symbol') expr] | "<span class='literal'>this</span>"
+  #[a(name='array-application' class='symbol') array-application] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>[</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>]</span>"
   
   #[a(name='array-size' class='symbol') array-size] = "<span class='literal'>#</span>" #[a(href='#array-size-object' class='symbol') array-size-object] ( "<span class='literal'>@</span>" #[a(href='#array-size-dim' class='symbol') array-size-dim] )?
   

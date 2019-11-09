@@ -57,13 +57,13 @@ pre#grammar.
       |
       #[a(href='#conditional' class='symbol') conditional]
       |
-      #[a(href='#lambda' class='symbol') lambda]
+      #[a(href='#func-lambda' class='symbol') func-lambda]
       |
       #[a(href='#func-application' class='symbol') func-application]
       |
       #[a(href='#func-composition' class='symbol') func-composition]
       |
-      #[a(href='#array-func' class='symbol') array-func]
+      #[a(href='#array-lambda' class='symbol') array-lambda]
       |
       #[a(href='#array-enum' class='symbol') array-enum]
       |
@@ -89,20 +89,16 @@ pre#grammar.
   
   #[a(name='conditional' class='symbol') conditional] = "<span class='literal'>if</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>then</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>else</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='lambda' class='symbol') lambda] =
-      "<span class='literal'>\</span>" #[a(href='#param-list' class='symbol') param-list] "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr]
+  #[a(name='func-lambda' class='symbol') func-lambda] =
+      "<span class='literal'>(</span>" #[a(href='#param-list' class='symbol') param-list] "<span class='literal'>)</span>" "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr]
   
   #[a(name='func-application' class='symbol') func-application] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>(</span>" #[a(href='#expr-list' class='symbol') expr-list] "<span class='literal'>)</span>"
   
   #[a(name='func-composition' class='symbol') func-composition] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>.</span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-func' class='symbol') array-func] = "<span class='literal'>[</span>" ( #[a(href='#array-bounds' class='symbol') array-bounds] "<span class='literal'>:</span>" )? #[a(href='#index-mappings' class='symbol') index-mappings] "<span class='literal'>]</span>"
+  #[a(name='array-lambda' class='symbol') array-lambda] = "<span class='literal'>[</span>" #[a(href='#array-lambda-params' class='symbol') array-lambda-params] "<span class='literal'>]</span>" "<span class='literal'>-></span>" #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-bounds' class='symbol') array-bounds] = #[a(href='#expr-list' class='symbol') expr-list]
-  
-  #[a(name='index-mappings' class='symbol') index-mappings] = #[a(href='#index-mapping' class='symbol') index-mapping] ( "<span class='literal'>;</span>" #[a(href='#index-mapping' class='symbol') index-mapping] )* "<span class='literal'>;</span>"?
-  
-  #[a(name='index-mapping' class='symbol') index-mapping] =  #[a(href='#index-pattern' class='symbol') index-pattern] "<span class='literal'>-></span>" #[a(href='#array-values' class='symbol') array-values]
+  #[a(name='array-lambda-params' class='symbol') array-lambda-params] =  #[a(href='#id' class='symbol') id] ("<span class='literal'>:</span>" #[a(href='#int' class='symbol') int])? ("<span class='literal'>,</span>" #[a(href='#id' class='symbol') id] ("<span class='literal'>:</span>" #[a(href='#int' class='symbol') int])?)*
   
   #[a(name='index-pattern' class='symbol') index-pattern] = #[a(href='#index-pattern-elem' class='symbol') index-pattern-elem] ( "<span class='literal'>,</span>" #[a(href='#index-pattern-elem' class='symbol') index-pattern-elem] )*
   
@@ -121,9 +117,7 @@ pre#grammar.
   
   #[a(name='index-bounds' class='symbol') index-bounds] = #[a(href='#expr' class='symbol') expr]
   
-  #[a(name='array-enum' class='symbol') array-enum] = "<span class='literal'>[</span>" #[a(href='#array-enum-elem' class='symbol') array-enum-elem] ( "<span class='literal'>;</span>" #[a(href='#array-enum-elem' class='symbol') array-enum-elem] )*  "<span class='literal'>]</span>"
-  
-  #[a(name='array-enum-elem' class='symbol') array-enum-elem] = #[a(href='#expr' class='symbol') expr]
+  #[a(name='array-enum' class='symbol') array-enum] = "<span class='literal'>(</span>" #[a(href='#expr' class='symbol') expr] ( "<span class='literal'>,</span>" #[a(href='#expr' class='symbol') expr] )* "<span class='literal'>)</span>"
   
   #[a(name='array-concat' class='symbol') array-concat] = #[a(href='#expr' class='symbol') expr] "<span class='literal'>++</span>" #[a(href='#expr' class='symbol') expr]
   

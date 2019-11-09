@@ -56,13 +56,13 @@ expr =
     |
     conditional
     |
-    lambda
+    func-lambda
     |
     func-application
     |
     func-composition
     |
-    array-func
+    array-lambda
     |
     array-enum
     |
@@ -88,20 +88,16 @@ binary-op =
 
 conditional = "if" expr "then" expr "else" expr
 
-lambda =
-    "\" param-list "->" expr
+func-lambda =
+    "(" param-list ")" "->" expr
 
 func-application = expr "(" expr-list ")"
 
 func-composition = expr "." expr
 
-array-func = "[" ( array-bounds ":" )? index-mappings "]"
+array-lambda = "[" array-lambda-params "]" "->" expr
 
-array-bounds = expr-list
-
-index-mappings = index-mapping ( ";" index-mapping )* ";"?
-
-index-mapping =  index-pattern "->" array-values
+array-lambda-params =  id (":" int)? ("," id (":" int)?)*
 
 index-pattern = index-pattern-elem ( "," index-pattern-elem )*
 
@@ -120,9 +116,7 @@ array-values  =
 
 index-bounds = expr
 
-array-enum = "[" array-enum-elem ( ";" array-enum-elem )*  "]"
-
-array-enum-elem = expr
+array-enum = "(" expr ( "," expr )* ")"
 
 array-concat = expr "++" expr
 

@@ -183,9 +183,9 @@ block page-content
   pre.
     f(g) = g(1,2) + g(3,4);
 
-    a = f(#[b \x, y -> x * y]);
+    a = f(#[b (x,y) -> x*y]);
 
-  p See #[a(href=ref_grammar('lambda')) Grammar: lambda].
+  p See #[a(href=ref_grammar('func-lambda')) Grammar: func-lambda].
 
   h2: a(name='type-decl') Type annotations
 
@@ -194,7 +194,7 @@ block page-content
     for a name:
 
   pre.
-    y : real64;
+    #[b y : real64;]
     y = 1 + f(x);
 
   p.
@@ -221,8 +221,9 @@ block page-content
     except that it is not polymorphic:
 
   pre.
-    external transform : [100]real64 -> [50]real64;
-    x = [100: i -> sin(i/100)];
+    <b>external transform : [100]real64 -> [50]real64;</b>
+
+    x[i] = sin(i/100), if i < 100;
     y = transform(x);
 
   p.
@@ -253,9 +254,9 @@ block page-content
     multiple dimensions with a tuple: #{'\<x,y,...\>'}.
 
   p.
-    Arrays can be defined using equations or as part of an expression,
-    similar to the difference between a named function #[code f(x) = y]
-    and an unnamed one #[code \x -> y].
+    Similarly to general functions,
+    arrays and streams can be defined using equations (named)
+    or as part of an expression (unnamed).
 
   h2: a(name='array-equations') Array equations
 
@@ -318,26 +319,24 @@ block page-content
     li Multiplication of a constant and a variable.
     li Division and modulo of a variable with a constant divisor.
 
-  h2 Array expressions
+  h2 Array expressions (lambda arrays)
 
   p.
-    See #[a(href=ref_grammar('array-func')) Grammar: array-func].
+    See #[a(href=ref_grammar('array-lambda')) Grammar: array-lambda].
 
   p.
-    An array can also be defined using an expression
+    An unnamed array can also be defined using an expression
     which can be part of a larger expression.
-    In the following example, an array defined between the
-    brackets <code>[...]</code> is passed as an argument
-    to a function #[code f]:
+    In the following example, an array (in bold)
+    is passed as an argument to a function #[code f]:
 
   pre.
-    r = f([5,10: x,y -> x+y])
+    r = f(<b>[i:5] -> i*2</b>)
 
   p.
-    The optional part up to #[code :] explicitly specifies the size of
-    the array, removing the need to specify the size using index constraints.
-    The rest associates indices with values in
-    the same manner as an #[a(href='#array-equations') array equation].
+    Each index variable between the brackets on the left side of #[code ->]
+    can optionally be followed by its upper bound.
+    This removes the need to specify the bound using index constraints.
 
 
   h2 Streams
@@ -351,26 +350,22 @@ block page-content
     s[i] = i * 2;
 
   p.
-    A stream is also defined using an array expression by
-    using #[code ~] to denote an infinite dimension:
+    A stream is also defined using an array expression
+    without an index bounds, or using #[code ~] (infinity) as the index bound:
 
   pre.
-    s = [~: i -> i * 2];
-
-  p.
-    Omitting array size altogether also implies infinite size:
-
-  pre.
-    s = [i -> i * 2];
+    [i]   -> i * 2
+    ... or
+    [i:~] -> i * 2
 
   h2 Nested arrays
 
   p.
-    Array expressions can be nested, resulting in an array with combined
+    Arrays can be defined as elements of other arrays, resulting in an array with combined
     dimensions:
 
   pre.
-    a = [t -> [5: i -> sin(t*i)]];
+    a = [t] -> [i:5] -> sin(t*i);
 
   p.
     The array "a" is a 2-dimensional array with size #{'<~, 5>'}.
@@ -382,7 +377,7 @@ block page-content
     (see #[a(href=ref_grammar('array-application')) Grammar: array-application]):
 
   pre.
-    a = [5,10: x,y -> x+y];
+    a = [x:5,y:10] -> x+y;
     b = <b>a[3,4]</b>;
 
   p.
@@ -390,7 +385,7 @@ block page-content
     results in an array with the remaining dimensions:
 
   pre.
-    a = [5,10: x,y -> x+y];
+    a = [x:5,y:10] -> x+y;
     b = <b>a[3]</b>;
 
   h2: a(name='recursive-arrays') Recursive arrays
@@ -401,13 +396,6 @@ block page-content
   pre.
     a[0] = 0.0;
     a[n] = a[n-1] * 0.8;
-
-  p.
-    A recursive array can also be defined using an expression by referring
-    to the array with the keyword #[code this]:
-
-  pre.
-    a = [0 -> 0.0; n -> this[n-1] * 0.8];
 
   p.
     Multiple arrays can be mutually recursive:
@@ -425,16 +413,18 @@ block page-content
 
   pre.
     x = 100;
-    a = [4; x*3; [-1; -2]; x+2];
+    a = #[b (4, x*3, (-1, -2), x+2)];
 
   h2 Array concatenation
 
   p.
     Two arrays can be concatenated
-    (see #[a(href=ref_grammar('array-concat')) Grammar: array-concat]):
+    (see #[a(href=ref_grammar('array-concat')) Grammar: array-concat]).
+    The first array must be finite in its first dimension
+    while the second can be a stream:
 
   pre.
-    a = [5: i -> i] ++ [10: i -> i^2];
+    a = ([i:5] -> i) ++ ([j] -> j*2);
 
   h1: a(name='primitive-values') Primitive values
 
@@ -576,7 +566,7 @@ block page-content
     on array elements, given that the array sizes are compatible:
 
   pre.
-    a = [5: i -> i] + [5: i -> 10*i];
+    a = ([i:5] -> i) + ([i:5] -> 10*i);
 
   h2 Broadcasting
 
@@ -597,10 +587,10 @@ block page-content
     with an array of equal size (c), or an array with more dimensions (d):
 
   pre.
-    a = [t -> sin(t*0.2)];
+    a[t] = sin(t*0.2);
     b = a * 0.1;
-    c = a * [t -> sin(t*0.01)];
-    d = a * [t -> [10: i -> sin(t*0.1/i)]];
+    c = a * [t] -> sin(t*0.01);
+    d = a * [t] -> [i:10] -> sin(t*0.1/i);
 
   h2 Broadcasting in indexing
 
@@ -609,14 +599,14 @@ block page-content
     dimensions, resulting in the array value at an index with equal common dimensions.
 
   p.
-    For example, the function "f" can be applied to a primitive value (a), in which
-    case !{'<code>k[t]</code>'} is a constant expression. But it can also be applied to
-    a stream (b) so that !{'<code>k[t]</code>'} is variable:
+    For example, the function #[code f] can be applied to the primitive value #[code a], in which
+    case !{'<code>k[t]</code>'} is a constant expression. It can also be applied to
+    the stream #[code b] so that !{'<code>k[t]</code>'} is variable:
 
   pre.
-    f(k) = [t -> sin(t * k[t])];
+    f(k) = [t] -> sin(t * k[t]);
     a = f(0.1);
-    b = f([t -> sin(t * 0.01)]);
+    b = f([t] -> sin(t * 0.01));
 
   h2 Broadcasting in array definition
 
@@ -628,4 +618,4 @@ block page-content
 
   pre.
     a[0] = 1;
-    a[t] = [10: i -> t + i];
+    a[t] = [i:10] -> t + i;

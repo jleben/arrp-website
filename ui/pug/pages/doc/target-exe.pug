@@ -1,0 +1,146 @@
+extends ../../default-page.pug
+
+block page-content
+
+    h1 Generated Executables
+
+    p The Arrp compiler can generate an executable program (with the help of a C++ compiler).
+
+    p.
+        The executable can read/write inputs and outputs from standard input and output channels (terminal, pipe, etc.) and from files.
+        Small amounts of input data can also be provided using command line options.
+        Input and output can use various formats (currently text or native binary).
+
+    h2 A Quick Example
+
+    p For example, consider the following Arrp code:
+
+    pre.
+        input x : [~]int;
+        output y = x * 2;
+
+    p Assuming the above code is in a file #[code program.arrp], we can generate an executable named #[code program] like this:
+
+    pre arrp program.arrp -x program
+
+    p By default, this program will use the standard input channel for stream #[code x] and the standard output channel for stream #[code y], both using the #[a(href='#text-format') text format].
+
+    p Running #[code ./program -h] will print help on other options.
+
+    p.
+        When running #[code ./program] in a terminal, it waits for us to type in some input.
+        After typing some input and a line break, the program responds with the corresponding output, each element on a separate line.
+        A terminal session might look like this:
+
+    pre.
+        input  ->  1
+        output ->  2
+        input  ->  5
+        output ->  10
+        input  ->  3 -2 6
+        output ->  6
+        output ->  -4
+        output ->  12
+
+    h2 Input Sources and Output Destinations
+
+    p.
+        Running #[code ./program -h] will print help on all the options and a list of input and output names.
+
+    p.
+        If an input requires a small amount of data, it can be provided literally on the command line. For example, assuming #[code program] contains <code>input some_option : [3]int</code>, the input can be set like this:
+
+    pre ./program some_option="2 5 6"
+
+    p.
+      Literal values like this use the #[a(href='#text-format') text format].
+
+    p.
+        To instruct the program to read an input or write an output to a file, provide the file name like this:
+
+    pre ./program some_input=some_file
+
+    p.
+        In place of the file name, "pipe" can be used to explicitly use the standard input or output channel:
+
+    pre ./program some_input=pipe
+
+    p.
+      Standard channels and files can use any of the #[a(href='#io-formats') available formats].
+
+    p.
+        If there is a single input/output or a single stream-type input/output,
+        it will automatically use the standard input/output channel.
+
+
+    h2: a(name='io-formats') Input and Output Formats
+
+    p.
+        Different formats can be specified for inputs and outputs using standard channels and files.
+
+    p.
+        Unless otherwise specified, all inputs and outputs use the text format.
+
+    p.
+        A different default format can be specified with the #[code -f] option:
+
+    pre ./program -f raw
+
+    p.
+        A format for an individual input or output can be specified following a colon:
+
+    pre ./program some_input=pipe:raw
+
+    p.
+      In all cases, array elements are read and written as a sequence following the lexicographical
+      order of array indices, e.g. for a 2 dimensional array:
+      (0,0), (0,1), (0,2), ... (1,0), (1,1), ...
+
+    p These are the available formats:
+
+    ul
+      li
+        p #[a(name='text-format') Text Format] (option #[code text]):
+
+        p.
+            Individual array elements are extracted as if using the C++ stream
+            #[a(href='https://en.cppreference.com/w/cpp/io/basic_istream/operator_gtgt') input]
+            and
+            #[a(href='https://en.cppreference.com/w/cpp/io/basic_ostream/operator_ltlt') output]
+            operators.
+            Elements are separated by spaces, line breaks or other white space.
+      li
+        p #[a(name='raw-format') Raw Format] (option #[code raw]):
+
+        p.
+            Each array element is stored just like natively in the memory,
+            for example a value of type #[code real32] may be stored as a
+            little-endian 32-bit IEEE floating point number.
+
+    h2 Buffering
+
+    p.
+      To improve performance, the generated executable may read and write data in larger chunks and buffer it.
+    p.
+      The buffer size can be adjusted using the #[code -b] option. For example, to set it to 64 elements:
+
+    pre.
+      ./program -b 64
+
+    p.
+      When an input is buffered, the program reads from the source in chunks equal to the size of the
+      buffer.
+      It will read the next chunk only when more data is required to produce output.
+
+    p.
+      When an output is buffered, the program will write to the destination in chunks equal to the size of
+      the buffer.
+      It will write a chunk as soon as that amount of new data is produced.
+
+    p.
+      Currently, buffering is enabled only for inputs and outputs in raw format,
+      and when the chosen buffer size is considerably larger than the amount of data
+      the program normally consumes and produces at one time.
+      Mind that (depending on the compilation options)
+      a multi-dimensional stream may produce or consume an entire slice at a time -
+      meaning a group of elements with the same index in the first dimension.

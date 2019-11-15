@@ -15,7 +15,7 @@ block page-content
     To generate a file with a different name, follow the "--cpp" option with
     the desired name. For example, to generate "something.cpp", execute:
 
-  pre arrp example.arrp --cpp something
+  pre arrp example.arrp --cpp something.cpp
 
   h1 Namespace
 
@@ -38,8 +38,8 @@ block page-content
 
     input a : int;
     input b : [~,10]real64;
-
     ...
+    output c;
 
   p: b C++:
 
@@ -56,11 +56,13 @@ block page-content
           IO * io;
           void prelude()
           {
-              ... input_a(a); ... input_b(b); ...
+              ... input_a(a) ...
+              ... input_b(b) ...
           }
           void period()
           {
-              ... input_b(b); ...
+              ... input_b(b) ...
+              ... output_c(...) ...
           }
       };
     }
@@ -88,17 +90,17 @@ block page-content
 
   p.
     When some input or output data needs to be exchanged, the program class will
-    call a function on the IO with an argument: the buffer where the data is to be written
-    or read from.
-    For an input, the function named "input_name" is called, where "name"
-    is replaced by the name of the input as declared in Arrp.
-    The function named "output" is called to exchange output data.
+    call a method of the IO object.
+    This method is called #[code input_name] for an input
+    named "name", and likewise #[code output_name] for an output.
+    The method is passed an argument:
+    the buffer where the data is to be written or read from.
 
   p.
-    If an input or output is an infinite array, the input or output function is
-    called once for each sample of the array in the first dimension.
-    The calls happen in order form index 0 to infiniy.
+    If an input or output is a stream, the input or output function is
+    called once for each sample of the stream in the first dimension.
+    The calls happen in order from index 0 to infiniy.
 
   p.
-    If an input or output is not an infinite array, the input or output function
+    If an input or output is not a stream, the input or output function
     is called only a single time for the entire data.

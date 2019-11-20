@@ -1,18 +1,30 @@
+input freq : real64;
+output audio_out : [~]real64;
+
 sample_rate = 44100;
-freq = 500;
-output audio_out = 0.1 * osc(table, freq/sample_rate);
+
+audio_out = 0.1 * sound(freq);
+
+sound(freq) = y * amp where
+{
+  amp = ramp(1.0, 0.0, 1.0)^2;
+  fmod = ramp(0.0, 1.0, 1.0)^2 * 40 + 4;
+  f0 = osc(fmod) * freq * 0.1 + freq;
+  y =
+    0.1 * osc(f0) +
+    0.5 * osc(2*f0) +
+    0.2 * osc(3*f0);
+};
+
+ramp(start, stop, duration) =
+  [t] -> start + min(1.0, t/(duration * sample_rate)) * (stop - start);
+
+osc(freq) = y where {
+  y[t] = interpolate(table, phase(freq/sample_rate)[t] * #table);
+};
 
 table_size = 500;
-table =
-    0.1 * harmonic(0, table_size) +
-    0.5 * harmonic(1, table_size) +
-    0.2 * harmonic(2, table_size) +
-    0.3 * harmonic(3, table_size);
-
-harmonic(k,N) = [N: i -> sin(k*i/N*2*pi)];
-
-osc(table, freq) =
-    [t -> interpolate(table, phase(freq)[t] * #table)];
+table = [i:table_size] -> sin(i/table_size*2*pi);
 
 interpolate(table, i) = table[i0] * (1-d) + table[i1] * d where
 {

@@ -1,34 +1,19 @@
+
+input roomsize : real64;
+input damping : real64;
+input audio_in : [~]real32;
+output audio_out : [~]real32;
+
 scaleroom = 0.28;
 offsetroom = 0.7;
-COMB_FEEDBACK = real32(0.5 * scaleroom + offsetroom);
-
 scaledamp = 0.4;
-COMB_DAMPING = real32(0.5 * scaledamp);
 
+COMB_FEEDBACK = real32(max(0.0, min(1.0, roomsize)) * scaleroom + offsetroom);
+COMB_DAMPING = real32(max(0.0, min(1.0, damping)) * scaledamp);
 ALLPASS_FEEDBACK = real32(0.5);
+INPUT_GAIN = real32(0.015);
 
-input audio_in : [~]real32;
-output audio_out = mono_freeverb(audio_in);
-
-delay(N,x) = [~: n
-    | n < N -> real32(0)
-    | x[n-N]
-];
-
-lbcf(D,x) = y where {
-    y :: [~]real32;
-    y = delay(D, w * COMB_FEEDBACK + x);
-    w :: [~]real32;
-    w = delay(1,y) * (real32(1) - COMB_DAMPING) + delay(1,w) * COMB_DAMPING;
-};
-
-allpass_comb(D, x) = y where {
-    y = -ALLPASS_FEEDBACK * w1 + w2;
-    w2 :: [~]real32;
-    w1 :: [~]real32;
-    w2 = delay(D, w1);
-    w1 = w2 * ALLPASS_FEEDBACK + x;
-};
+audio_out = audio_in + mono_freeverb(audio_in * INPUT_GAIN);
 
 mono_freeverb(x) = y0 where {
     y0 = allpass_comb(225, y1);
@@ -44,4 +29,20 @@ mono_freeverb(x) = y0 where {
         lbcf(1491,x) +
         lbcf(1557,x) +
         lbcf(1617,x);
+};
+
+allpass_comb(D, x) = y where {
+    y = -ALLPASS_FEEDBACK * w1 + w2;
+    w1 = w2 * ALLPASS_FEEDBACK + x;
+    w2 = delay(D, w1);
+};
+
+lbcf(D,x) = y where {
+    y = delay(D, w * COMB_FEEDBACK + x);
+    w = delay(1,y) * (real32(1) - COMB_DAMPING) + delay(1,w) * COMB_DAMPING;
+};
+
+delay(N,x) = y where y[n] = {
+    real32(0), if n < N;
+    x[n-N], otherwise;
 };

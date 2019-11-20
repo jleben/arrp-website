@@ -1,19 +1,15 @@
 
 link(rel='stylesheet' href=base_url+'/css/style.css')
 link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400|Share+Tech|Open+Sans')
+meta(name="viewport" content="width=device-width, initial-scale=1")
 
 #header
   #header-content
-    #menu-intro
-        a(href=base_url + '/') Arrp |
-
-    ul(id='menu')
-      li
-        a(href=base_url+'/doc') Documentation
-      li
-        a(href=base_url+'/research') Research
-      li
-        a(href=base_url+'/play') Playground
+    a.home(href=base_url + '/') Arrp
+    | |
+    a.item(href=base_url+'/doc') Documentation
+    a.item(href=base_url+'/research') Research
+    a.item(href=base_url+'/play') Playground
 
 #page
   block page

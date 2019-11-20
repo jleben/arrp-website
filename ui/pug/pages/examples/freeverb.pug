@@ -4,24 +4,24 @@ block page-content
   h1 Freeverb
 
   p.
-    The function 'mono_freeverb' implements the
+    The function #[code mono_freeverb] implements the
     #[a(href='https://ccrma.stanford.edu/~jos/pasp/Freeverb.html') Freeverb] reverberation algorithm
     for one channel of audio at 44.1kHz.
 
   p.
-    The program has two parameters: damping and roomsize, both in the range 0.0 to 1.0.
+    The program has two parameters: #[code damping] and #[code roomsize], both in the range 0.0 to 1.0.
 
   p.
-    With the help of 'ffmpeg', you can process an audio file through this program:
+    With the help of #[a(href='https://www.ffmpeg.org/') ffmpeg], you can process an audio file through this program:
 
   ol
-    li Save the code into a file 'freeverb.arrp', then compile it:
+    li Save the code into a file #[code freeverb.arrp], then compile it:
 
       pre arrp freeverb.arrp -x freeverb
 
     li
       | Run the program, reading the file #[code input.wav] through #[code ffmpeg] into the program
-      | and writing the output through #[code ffmpeg] into the file #[code output.wav] :
+      | and writing the output through #[code ffmpeg] into the file #[code output.wav]:
 
       pre.
         ffmpeg -i input.wav -ac 1 -ar 44.1k -f f32le pipe:1 |

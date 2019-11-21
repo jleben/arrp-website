@@ -17,40 +17,39 @@ block page-content
 
   h1 Features
 
-  table(id='examples-table')
-    tr
-      td(class='description')
+
+  #examples-table
+
+    .example
+      .description
         p Write code like you write the math - using the same equations
-      td(class='code')
-        pre.
+      .code: pre.
           y[0] = 0;
           y[n] = a*x[n] + (1-a)*y[n-1];
-    tr
-      td(class='description')
+
+    .example
+      .description
         p Work with signals at different rates
-      td(class='code')
-        pre.
+      .code: pre.
           y[n] = x[n*hop]
 
-    tr
-      td(class='description')
+    .example
+      .description
         p Work with multi-dimensional streams
-      td(class='code')
-        pre.
-          y[n,k] = x[n+k] * w[k]
+      .code: pre.
+         y[n,k] = x[n+k] * w[k]
 
-    tr
-      td(class='description')
+    .example
+      .description
         p Do math with entire signals
-      td(class='code')
-        pre.
+      .code: pre.
           x[n] = n;
           y = sin(x/100*2*pi) * 0.5;
-    tr
-      td(class='description')
+
+    .example
+      .description
         p Define generic functions with other functions as parameters
-      td(class='code')
-        pre.
+      .code: pre.
           apply_to_pairs(x, f) = y where
               y[t] = f(x[t], x[t+1]);
 

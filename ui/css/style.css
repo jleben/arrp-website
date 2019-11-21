@@ -1,16 +1,19 @@
 html {
   font-size: 16px;
   text-size-adjust: none;
+  font-family: 'Open Sans', sans-serif;
 }
 
 body {
   display: flex;
   flex-flow: column;
+  align-items: center;
   margin: 0px
 }
 
 #header
 {
+  width: 100%;
   display: flex;
   flex-flow: row;
   justify-content: center;
@@ -48,106 +51,123 @@ body {
     font-size: 1.7rem;
 }
 
-#page {
-  flex-grow: 1;
+.page-layout {
+  width: 100%;
   display: flex;
   flex-flow: row;
-  align-items: stretch;
   justify-content: center;
-  font-family: 'Open Sans', sans-serif;
+  align-items: stretch;
 }
 
-#page-content {
-  flex-grow: 1;
-  max-width: 580pt;
+.page-content {
+  width: 580pt;
   min-width: 0;
   padding-top: 2pt;
   padding-left: 25pt;
   padding-right: 25pt;
 }
 
-#page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 1.6rem; color: #000066; margin-bottom: 17pt }
-#page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 1.2rem; color: #000066 }
-#page-content a  { text-decoration: none; color: #000066; font-weight: bold; }
+.page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 1.6rem; color: #000066; margin-bottom: 17pt }
+.page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 1.2rem; color: #000066 }
+.page-content a  { text-decoration: none; color: #000066; font-weight: bold; }
 
-#page-content table {
+.page-content table {
   border-collapse: collapse;
 }
 
-#page-content table, th, td {
+.page-content table, th, td {
   border: 1px solid rgb(200,200,200);
 }
 
-#page-content td {
+.page-content td {
   padding: 4px
 }
 
-#page-content code {
+.page-content code {
   background-color: rgb(230,230,230);
   padding-left: 2px;
   padding-right: 2px;
 }
 
-#page-content pre {
+.page-content pre {
   font-size: 0.9rem;
   background-color: rgb(250,250,250);
   border: 1px solid rgb(200,200,200);
-  padding: 10px;
   border-radius: 7px;
+  padding: 10px;
   overflow-x: auto;
 }
 
 
-#page-content #examples-table {
+#examples-table {
+  width: 100%;
   display: flex;
   flex-flow: column;
 }
 
-#page-content #examples-table .example {
+#examples-table .example {
+  min-height: 100px;
   display: flex;
-  flex-flow: row;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
+  flex-flow: column;
   align-items: stretch;
-  border: 1px solid rgb(200,200,200);
+  padding-top: 1em;
+  padding-bottom: 1.5em;
+  border-top: 1px solid black;
 }
 
-#page-content #examples-table .description {
-  flex-grow: 1;
-  flex-basis: 15em;
-  min-width: 0;
+
+#examples-table .example:nth-child(odd) {
+/*
   background-color: #edf2ff;
   color: #000066;
-  //background-color: #000088;
-  //color: #ffffff;
+  */
+  /*
+  background-color: #000066;
+  color: white;
+  */
+}
+
+#examples-table .description {
+  flex-grow: 1;
+  min-width: 0;
+  /*background-color: #edf2ff;*/
+  /*color: #000066;*/
   text-align: center;
   padding-left: 1em;
   padding-right: 1em;
   overflow: hidden;
 }
 
-#page-content #examples-table .code {
+#examples-table .description p {
+  margin: 0
+}
+
+#examples-table .code {
   flex-grow: 1;
-  flex-basis: 20em;
+
   display: flex;
-  flex-flow: column;
+  flex-flow: row;
   justify-content: center;
   min-width: 0;
-  background-color: rgb(252,252,252);
+
+  margin-top: 1em;
+
+  /*background-color: rgb(252,252,252);*/
   overflow: hidden;
 }
 
-#page-content #examples-table .code pre {
+#examples-table .code pre {
   vertical-align: middle;
-  border: none;
-  overflow-x: auto;
+  background-color: rgb(250,250,250);
+  border: 1px solid rgb(200,200,200);
+  border-radius: 7px;
+  overflow: auto;
   min-width: 0;
   margin: 0;
-  background: none;
   padding: 1em;
 }
 
-#page-content .button-link {
+.button-link {
   //font-family: 'Open Sans', sans-serif;
   //font-size: 12pt;
   white-space: nowrap;
@@ -164,7 +184,7 @@ body {
   margin-right: 10pt;
 }
 
-#page-content .button-link:hover {
+.page-content .button-link:hover {
   background-color: #d2ddfa
 }
 
@@ -183,6 +203,7 @@ body {
 }
 
 #playground {
+  width: 100%;
   flex: 1;
   display: flex;
   flex-flow: row;

@@ -5,10 +5,21 @@ meta(name="viewport" content="width=device-width, initial-scale=1")
 
 #header
   #header-content
-    a.home(href=base_url + '/') Arrp
-    | |
-    a.item(href=base_url+'/doc') Documentation
-    a.item(href=base_url+'/research') Research
-    a.item(href=base_url+'/play') Playground
+    #title
+      a.home(href=base_url + '/') Arrp
+      span#menu-sep |
+    #menu
+      a.item(href=base_url+'/doc') Documentation
+      a.item(href=base_url+'/play') Playground
+    script.
+      function toggleMenu() {
+        let menu = document.getElementById('menu')
+        console.log(menu.style.display)
+        if (menu.style.display === '' || menu.style.display == 'none') {
+          menu.style.display = 'flex'
+        } else {
+          menu.style.display = 'none'
+        }
+      }
 
 block page

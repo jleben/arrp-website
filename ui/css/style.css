@@ -17,7 +17,12 @@ body {
   display: flex;
   flex-flow: row;
   justify-content: center;
+
   background-color: #000066;
+
+  font-family: 'Share Tech', sans-serif;
+  font-size: 1.7rem;
+  color: #ffffff
 }
 
 #header-content {
@@ -25,16 +30,12 @@ body {
   display: flex;
   flex-flow: row wrap;
   max-width: 580pt;
+  min-width: 0;
   padding-left: 25pt;
   padding-right: 25pt;
   padding-top: 8pt;
   padding-bottom: 8pt;
-}
-
-#header {
-  font-family: 'Share Tech', sans-serif;
-  font-size: 1.7rem;
-  color: #ffffff
+  align-items: baseline;
 }
 
 #header a {
@@ -48,7 +49,18 @@ body {
 
 #header a.item {
     margin-left: 10pt;
-    font-size: 1.7rem;
+}
+
+#menu {
+  display: flex;
+  font-size: 1.5rem;
+  min-width: 0;
+}
+
+
+@media only screen and (max-width: 540px) {
+
+
 }
 
 .page-layout {

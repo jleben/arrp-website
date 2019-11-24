@@ -2,16 +2,37 @@ extends ../../default-page.pug
 
 block page-content
 
-  h1 Arrp Compiler
+  :markdown-it
+    # Arrp Compiler
 
-  p Installation packages are available on GitHub as release assets:
+    ## Installation
 
-  p: a(href='https://github.com/jleben/arrp/releases') https://github.com/jleben/arrp/releases
+    Installation packages are available on GitHub as [release assets](https://github.com/jleben/arrp/releases).
 
-  p Source code is also available on GitHub:
+    Please see release notes for installation instructions.
 
-  p: a(href='https://github.com/jleben/arrp') https://github.com/jleben/arrp
+    ## Source Code
 
-  p.
+    Source code is also available [on GitHub](https://github.com/jleben/arrp)
+
     Please see the README file in the repository for help
-    on installing and using the compiler as well as building it from source.
+    on building the compiler from source.
+
+    ## Usage
+
+    Print help and available options:
+
+        arrp --help
+
+    Compile Arrp code in file `program.arrp` and generate C++ code in file `program.cpp`:
+
+        arrp program.arrp --cpp program.cpp
+
+    Compile Arrp code in file `program.arrp` and generate an executable `program`:
+
+        arrp program.arrp --exe program
+
+    See the following pages for more info:
+
+    - [Generated C++](/doc/target-cpp)
+    - [Generated Executable](/doc/target-exe)

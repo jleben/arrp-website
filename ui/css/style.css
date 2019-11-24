@@ -80,7 +80,8 @@ body {
 }
 
 .page-content h1 { font-family: 'Share Tech', sans-serif; font-size: 1.6rem; color: #000066; margin-bottom: 17pt }
-.page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 1.2rem; color: #000066 }
+.page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 1.3rem; color: #000066 }
+.page-content h3 { font-size: 1rem; color: #000066 }
 .page-content a  { text-decoration: none; color: #000066; font-weight: bold; }
 
 .page-content table {
@@ -95,7 +96,7 @@ body {
   padding: 4px
 }
 
-.page-content code {
+.page-content :not(pre) > code {
   background-color: rgb(230,230,230);
   padding-left: 2px;
   padding-right: 2px;

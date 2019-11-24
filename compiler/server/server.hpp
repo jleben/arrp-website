@@ -97,6 +97,7 @@ private:
     const fs::path output_path = "output";
     const fs::path arrp_source_path = output_path / "program.arrp";
     const fs::path arrp_compile_log_path = output_path / "arrp_compile_log.txt";
+    const fs::path arrp_version_path = output_path / "arrp_version.txt";
     const fs::path cpp_source_path = output_path / "arrp_program.cpp";
     const fs::path cpp_compile_log_path = output_path / "cpp_compile_log.txt";
     const fs::path program_path = output_path / "program";
@@ -117,6 +118,7 @@ private:
     void prepare_filesystem();
     static void ensure_empty_dir(const fs::path &);
     void write_input_files(Request &);
+    void get_arrp_version();
     void compile_arrp_code();
     void compile_cpp_code();
     void run_program(int out_count);

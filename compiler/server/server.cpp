@@ -110,6 +110,7 @@ void Play_Handler::play(HTTPServerRequest & http_request,
     request.program_out_count = 1000;
     prepare_filesystem();
     write_input_files(request);
+    get_arrp_version();
     compile_arrp_code();
     //compile_cpp_code();
     run_program(request.program_out_count);
@@ -245,6 +246,23 @@ void Play_Handler::write_input_files(Request & request)
     write_file(request.input, program_in_path);
 }
 
+void Play_Handler::get_arrp_version()
+{
+    ostringstream cmd;
+    cmd << "ARRP_HOME=" << options().data_path
+        << " " << options().data_path << "/bin/arrp"
+        << " --version"
+        << " 2> " << arrp_version_path;
+
+    cerr << "Executing: " << cmd.str() << endl;
+
+    int status = system(cmd.str().c_str());
+    if (status == 0)
+        return;
+
+    throw Program_Error("Failed to get Arrp version.");
+}
+
 void Play_Handler::compile_arrp_code()
 {
     using namespace Poco::Net;
@@ -313,8 +331,8 @@ void Play_Handler::send_report(HTTPServerResponse & response, const string & err
     using namespace Poco::Net;
     using nlohmann::json;
 
-    string data;
-
+    cerr << "-- Arrp compiler version:" << endl;
+    print_file(arrp_version_path);
     cerr << "-- Arrp code:" << endl;
     print_file(arrp_source_path);
     cerr << "-- Arrp compilation:" << endl;
@@ -329,6 +347,7 @@ void Play_Handler::send_report(HTTPServerResponse & response, const string & err
     json j;
 
     j["error"] = error;
+    j["arrp_version"] = encode_file_in_base64(arrp_version_path);
     j["arrp"] = encode_file_in_base64(arrp_source_path);
     j["arrp_compiler"] = encode_file_in_base64(arrp_compile_log_path);
     j["cpp"] = encode_file_in_base64(cpp_source_path);

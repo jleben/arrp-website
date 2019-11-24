@@ -64,6 +64,7 @@ function decodeResponse(field) {
 
 function processArrpResponse(json) {
     var error = json.error
+    var arrp_version = decodeResponse(json.arrp_version)
     var arrp_compiler_log = decodeResponse(json.arrp_compiler)
     var cpp_source = decodeResponse(json.cpp)
     var cpp_compiler_log = decodeResponse(json.cpp_compiler_log)
@@ -71,6 +72,9 @@ function processArrpResponse(json) {
 
     if (error) {
         var msg = "There was a problem: " + error + '\n';
+        if (arrp_version && arrp_version.length) {
+          msg += '\n' + arrp_version.trim() + '\n'
+        }
         if (arrp_compiler_log) {
             msg += "\nArrp compiler output: \n";
             msg += arrp_compiler_log;
@@ -85,6 +89,11 @@ function processArrpResponse(json) {
     }
     else
     {
-        document.getElementById("arrp-output").value = program_out;
+        let text = ""
+        if (arrp_version && arrp_version.length) {
+          text += arrp_version.trim() + '\n\n'
+        }
+        text += program_out;
+        document.getElementById("arrp-output").value = text;
     }
 }

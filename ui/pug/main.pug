@@ -1,25 +1,36 @@
 
-link(rel='stylesheet' href=base_url+'/css/style.css')
-link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400|Share+Tech|Open+Sans')
-meta(name="viewport" content="width=device-width, initial-scale=1")
-
-#header
-  #header-content
-    #title
-      a.home(href=base_url + '/') Arrp
-      span#menu-sep |
-    #menu
-      a.item(href=base_url+'/doc') Documentation
-      a.item(href=base_url+'/play') Playground
+// Google Analytics
+html
+  head
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153424863-1"></script>
     script.
-      function toggleMenu() {
-        let menu = document.getElementById('menu')
-        console.log(menu.style.display)
-        if (menu.style.display === '' || menu.style.display == 'none') {
-          menu.style.display = 'flex'
-        } else {
-          menu.style.display = 'none'
-        }
-      }
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-153424863-1');
 
-block page
+    link(rel='stylesheet' href=base_url+'/css/style.css')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400|Share+Tech|Open+Sans')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+
+body
+  #header
+    #header-content
+      #title
+        a.home(href=base_url + '/') Arrp
+        span#menu-sep |
+      #menu
+        a.item(href=base_url+'/doc') Documentation
+        a.item(href=base_url+'/play') Playground
+      script.
+        function toggleMenu() {
+          let menu = document.getElementById('menu')
+          console.log(menu.style.display)
+          if (menu.style.display === '' || menu.style.display == 'none') {
+            menu.style.display = 'flex'
+          } else {
+            menu.style.display = 'none'
+          }
+        }
+
+  block page

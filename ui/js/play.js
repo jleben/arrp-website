@@ -28,6 +28,10 @@ function sendArrpInput() {
 
   var xmlhttp = new XMLHttpRequest();
 
+  var startTime = 0;
+  if (window.performance) {
+    startTime = performance.now();
+  }
   //console.log("Posting...\n");
 
   xmlhttp.responseType = 'json';
@@ -36,19 +40,47 @@ function sendArrpInput() {
       if (xmlhttp.readyState != 4) {
           return;
       }
+
+      var duration = 0;
+      if (window.performance) {
+        duration = performance.now() - startTime;
+      }
+
+      event_name = 'run';
+
       if (xmlhttp.status != 200) {
           var msg = "An error occured with the network request.\n"
                   + "HTTP status = " + xmlhttp.status + ".\n";
-                  + xmlhttp.responseText;
+          if (xmlhttp.response)
+              msg += xmlhttp.response;
           document.getElementById("arrp-output").value = msg;
+          event_name = 'run-error-http';
       }
       else if (xmlhttp.responseType != "json") {
           var msg = "Received unexpected response type: " + xmlhttp.responseType + '\n';
           document.getElementById("arrp-output").value = msg;
+          event_name = 'run-error-response-type';
       }
       else {
           processArrpResponse(xmlhttp.response);
+          if (xmlhttp.response.error) {
+            event_name = 'run-error';
+          } else {
+            event_name = 'run-successful';
+          }
       }
+
+      gtag('event', event_name, {
+        'event_category' : 'Playground',
+        'value': duration,
+      });
+
+      // Send timing
+      gtag('event', 'timing_complete', {
+        'name' : event_name,
+        'value' : duration,
+        'event_category' : 'Playground'
+      });
   };
   xmlhttp.open("POST", post_url, true);
   xmlhttp.send(dataBlob);

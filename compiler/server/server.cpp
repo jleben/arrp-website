@@ -272,6 +272,7 @@ void Play_Handler::compile_arrp_code()
         << " " << options().data_path << "/bin/arrp"
         << " " << arrp_source_path
         << " --exe " << program_path
+        << " --cpp-compiler-opts \"-O0\""
 //        << " --cpp " << (cpp_source_path.parent_path() / cpp_source_path.stem())
 //        << " --cpp-namespace arrp"
         << " 2> " << arrp_compile_log_path;

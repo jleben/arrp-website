@@ -9,7 +9,7 @@ services:
             "pug /input/pug/pages --out /output -O \"{base_url: ''}\" --watch"
 
     ui:
-        image: jakobleben/arrp-web-ui:2
+        image: jakobleben/arrp-web-ui:latest
         networks:
             - default
             - traefik-net
@@ -21,11 +21,11 @@ services:
             restart_policy:
                 condition: on-failure
             labels:
-                traefik.frontend.rule: "Host:127.0.0.1"
+                traefik.frontend.rule: "Host:127.0.0.1,192.168.0.12"
                 traefik.port: 80
                 traefik.docker.network: traefik-net
     compiler:
-        image: jakobleben/arrp-web-compiler:2
+        image: jakobleben/arrp-web-compiler:latest
         networks:
             - default
             - traefik-net

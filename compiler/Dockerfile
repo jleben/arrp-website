@@ -27,7 +27,7 @@ RUN apk add autoconf automake libtool gmp-dev python3
 
 RUN git clone https://github.com/jleben/arrp.git && \
     cd arrp && \
-    git checkout fdf29c903e0d63231c9a8ef6a6c25d2c717cf05f && \
+    git checkout 0b3672a058a29edee837168b1afba48e3ee03378 && \
     git submodule update --init --recursive
 
 # Build isl

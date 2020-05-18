@@ -24,7 +24,7 @@ function sendArrpInput() {
 
   var dataBlob = new Blob([JSON.stringify(data)], {type: 'application/json'});
 
-  var post_url = "http://" + location.host + "/compiler";
+  var post_url = "/compiler";
 
   var xmlhttp = new XMLHttpRequest();
 

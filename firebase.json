@@ -1,6 +1,14 @@
 {
   "hosting": {
     "public": "public",
+    "cleanUrls": true,
+    "rewrites": [{
+      "source": "/compiler",
+      "run": {
+        "serviceId": "arrp-compiler",
+        "region": "us-west1"
+      }
+    }],
     "ignore": [
       "firebase.json",
       "**/.*",

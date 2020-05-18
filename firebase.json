@@ -6,7 +6,7 @@
       "source": "/compiler",
       "run": {
         "serviceId": "arrp-compiler",
-        "region": "us-west1"
+        "region": "us-central1"
       }
     }],
     "ignore": [

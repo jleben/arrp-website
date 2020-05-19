@@ -5,7 +5,7 @@
     "rewrites": [{
       "source": "/compiler",
       "run": {
-        "serviceId": "arrp-compiler",
+        "serviceId": "arrp-compiler-v1",
         "region": "us-central1"
       }
     }],

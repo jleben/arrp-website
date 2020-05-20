@@ -27,7 +27,10 @@ deploy-compiler:
 .PHONY: ui
 ui: pug
 	mkdir -p public
-	docker run --rm -it -v $(shell pwd):/opt/build pug pug /opt/build/ui/pug/pages -O "{base_url: ''}" --out /opt/build/public
+	docker run --rm -it -v $(shell pwd):/opt/build pug pug /opt/build/ui/pages \
+	--basedir /opt/build/ui \
+	-O "{base_url: ''}" \
+	--out /opt/build/public
 	cp -r ui/css ui/js public/
 	mv -f public/home.html public/index.html
 

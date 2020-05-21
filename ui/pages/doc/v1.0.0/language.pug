@@ -3,7 +3,7 @@ extends /templates/doc-v1.0.0-page.pug
 block doc-content
 
   -
-    function grammar_url(sym) { return base_url + '/doc/syntax#' + sym }
+    function grammar_url(sym) { return doc_path+'/syntax#' + sym }
     function ref_grammar(sym) { return grammar_url(sym) }
     function grammar_ref(sym,text) { return '<a href="' + grammar_url(sym) + '">' + text + '</a>' }
 
@@ -13,7 +13,7 @@ block doc-content
     This document describes the structure and meaning of an Arrp program.
 
   p.
-    See also the #[a(href=base_url+'/doc/syntax') Formal syntax specification]. This document
+    See also the #[a(href=doc_path+'/syntax') Formal syntax specification]. This document
     provides links into the formal specification whenever a syntactical element is introduced.
 
   h1 Table of contents
@@ -118,7 +118,7 @@ block doc-content
   p.
     The way that input and output data is exchanged with the environment depends
     on the target form of compilation. See also the page on the
-    #[a(href=base_url+'/doc/target-cpp') C++ target].
+    #[a(href=doc_path+'/target-cpp') C++ target].
 
 
   h1: a(name='value-decl') Values and functions
@@ -232,7 +232,7 @@ block doc-content
   p.
     Precisely how an external function is executed depends
     on the target form of compilation. See also the page on the
-    #[a(href=base_url+'/doc/target-cpp') C++ target].
+    #[a(href=doc_path+'/target-cpp') C++ target].
 
   h1: a(name='arrays') Arrays and Streams
 

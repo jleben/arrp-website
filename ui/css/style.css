@@ -57,6 +57,26 @@ body {
   min-width: 0;
 }
 
+#doc_version_menu {
+  list-style-type: none;
+  padding: 0px;
+}
+
+#doc_version_menu li {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#doc_version_menu li.active a {
+  text-decoration: none; color: #000066; font-weight: bold;
+  white-space: nowrap;
+}
+
+#doc_version_menu li.inactive a {
+  text-decoration: none; color: #b3b3b3; font-weight: bold;
+  white-space: nowrap;
+}
 
 @media only screen and (max-width: 540px) {
 

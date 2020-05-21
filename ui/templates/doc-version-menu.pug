@@ -1,0 +1,14 @@
+
+mixin doc_version_menu(active_version)
+
+  -
+    options = [
+      { 'name': 'v1.0.0', 'text': 'Current Version (1.0.0)' },
+      { 'name': 'dev', 'text': 'In Development' }
+    ]
+
+  ul#doc_version_menu
+    each option in options
+      li(class=(active_version==option.name ? 'active' : 'inactive'))
+        a(href=('/doc/' + option.name))
+          = active_version==option.name ? '> ' + option.text : option.text

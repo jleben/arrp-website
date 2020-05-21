@@ -1,0 +1,40 @@
+extends /templates/doc-next-page.pug
+
+block doc-content
+  h1 Wavetable Oscillator
+
+  p.
+    The function #[code osc] implements a wavetable oscillator with
+    a fixed table and supporting a variable frequency.
+    In this example, the table is simply a sine wave.
+    The #[code osc] function is used multiple times
+    to create a complex sound.
+    The additional function #[code ramp] helps to create a decaying sound.
+
+  p.
+    The program has a parameter #[code freq] which controls the base frequency of the sound.
+
+  p.
+    With the help of #[a(href='https://www.ffmpeg.org/') ffmpeg], you can write the output of this program
+    into an audio file:
+
+  ol
+    li Save the code into a file #[code osc.arrp], then compile it:
+
+      pre arrp osc.arrp -x osc
+
+    li
+      | Run the program and write its output through #[code ffmpeg] into file #[code output.wav]:
+
+      pre.
+        ./osc -f raw freq=400 |
+        ffmpeg -y -t 1 -ac 1 -ar 44.1k -f f64le -i pipe:0 file:output.wav
+
+      | If you want to use a different sample rate, change #[code sample_rate]
+      | variable in the code, and adjust the ffmpeg option #[code -ar].
+
+  p.
+    Implementation:
+
+  pre
+    include /arrp-examples/wavetable_osc.arrp

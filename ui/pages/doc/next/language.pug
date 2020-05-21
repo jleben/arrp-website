@@ -1,0 +1,622 @@
+extends /templates/doc-next-page.pug
+
+block doc-content
+
+  -
+    function grammar_url(sym) { return doc_path+'/syntax#' + sym }
+    function ref_grammar(sym) { return grammar_url(sym) }
+    function grammar_ref(sym,text) { return '<a href="' + grammar_url(sym) + '">' + text + '</a>' }
+
+  h1 Arrp Language Guide
+
+  p.
+    This document describes the structure and meaning of an Arrp program.
+
+  p.
+    See also the #[a(href=doc_path+'/syntax') Formal syntax specification]. This document
+    provides links into the formal specification whenever a syntactical element is introduced.
+
+  h1 Table of contents
+
+  ul
+    li: a(href='#modules') Modules
+    li: a(href='#input-output') Input and output
+    li: a(href='#value-decl') Values and functions
+    li: a(href='#extern-decl') External functions
+    li: a(href='#arrays') Arrays and streams
+    li: a(href='#primitive-values') Primitive values
+    li: a(href='#built-in-ops') Built-in operations and functions
+    li: a(href='#pointwise-ops') Pointwise operations and broadcasting
+
+  h1: a(name='modules') Modules
+
+
+  p.
+    A module is the smallest unit of compilation, residing in a file or provided
+    to the compiler through standard input.
+
+  p.
+    A module consists of different kinds of declarations (all optional):
+
+  ul
+    li A declaration of the module name
+    li Declarations of imported modules
+    li Declarations of #[a(href='#input-output') input and output values]
+    li Declarations of #[a(href='#value-decl') other named values and functions]
+    li Declarations of #[a(href='#extern-decl') external functions]
+
+  p See #[a(href=ref_grammar('module')) Grammar: module].
+
+  p.
+    Here is a simple complete module that takes a stream of integers as input,
+    multiplies each integer by 2 and outputs a stream of resulting values:
+
+  pre.
+      module example;
+
+      input x : [~]int;
+      output y = x * 2;
+
+  h2 Default module name
+
+  p.
+    The module name declaration is optional.
+    If it is missing, the module gets the default name "m".
+
+  h2 Imported modules
+
+  p.
+    A #[a(href=ref_grammar('import-decl')) module import declaration]
+    causes the imported module to be compiled,
+    and the global names in that module become available in the current
+    module.
+
+  p.
+    When importing the module using #[code import lib], a value named #[code x] becomes
+    available as #[code lib.x] (see #[a(href=ref_grammar('qualified-id')) Grammar: qualified-id]).
+
+  p.
+    We can also import a module under and alias using #[code import lib as alias]
+    by which a value #[code x] in the module becomes available as #[code alias.x].
+
+  p.
+     The imported module must reside in a file named "module-name.arrp".
+     The file must either be adjacent to the location of the importing module,
+     or in one of the #[i import directories] given as an option to the compiler.
+
+  h1: a(name='input-output') Input and output
+
+  p.
+    An #[a(href=ref_grammar('input-decl')) input declaration] declares
+    an input, assigning it a name and a type.
+    For example, the following declares an input named #[code x]
+    as a stream of 64 bit real values:
+
+  pre.
+    input x : [~]real64
+
+  p.
+    The output is declared using an
+    #[a(href=ref_grammar('output-decl')) output declaration] which
+    can simply mark a name as an output or also specify its
+    value or type. For example, any of the following lines declares the value
+    named #[code y] to be the output:
+
+  pre.
+    output y;
+    output y = x * 2;
+    output y : [~]int;
+
+  p.
+    If the value of the output is not provided in the output declaration,
+    it must be defined separately, for example:
+
+  pre.
+    output y;
+    y = x * 2;
+
+  p.
+    The way that input and output data is exchanged with the environment depends
+    on the target form of compilation. See also the page on the
+    #[a(href=doc_path+'/target-cpp') C++ target].
+
+
+  h1: a(name='value-decl') Values and functions
+
+  p.
+    Value declarations define values and functions and bind them to names:
+
+  pre.
+    pi = 3.14159265359;
+
+    area_of_circle(r) = pi * r * r;
+
+    area_of_right_triangle(a, b) = a * b / 2;
+
+    a = area_of_right_triangle(10, 5);
+
+  p See Grammar: #[a(href=ref_grammar('value-decl')) value-decl], #[a(href=ref_grammar('func-decl')) func-decl]
+
+  p.
+    The scope of globally declared names is the entire module. They are mutually recursive.
+
+  h2 Local declarations
+
+  p.
+    Names with scope local to an expression can be declared using the
+    "let" and "where" expressions:
+
+  pre.
+    f(x) = #[b let] y = x * x #[b in] sin(y) + cos(y);
+
+    g(x) = sin(y) + cos(y) #[b where] y = x * x;
+
+  p.
+    See #[a(href=ref_grammar('let-expr')) Grammar: let-expr],
+    #[a(href=ref_grammar('where-expr')) Grammar: where-expr]
+
+  h2 Function application and polymorphism
+
+  p.
+    A function is applied when followed by arguments in parenthesis
+    (see #[a(href=ref_grammar('func-application')) Grammar: func-application]).
+
+  p.
+    Partial application is supported: a function applied to less
+    arguments than it has parameters results in another function
+    with the remaining parameters.
+
+  // TODO: add example
+
+  p.
+    All functions are polymorphic: they can be applied to arguments of
+    any type consistent with the expression of the function.
+
+  // TODO: add example
+
+  h2 Lambda functions
+
+  p.
+    An unnamed function (a "lambda abstraction") can be defined
+    as part of another expression:
+
+  pre.
+    f(g) = g(1,2) + g(3,4);
+
+    a = f(#[b (x,y) -> x*y]);
+
+  p See #[a(href=ref_grammar('func-lambda')) Grammar: func-lambda].
+
+  h2: a(name='type-decl') Type annotations
+
+  p.
+    Occasionally, you may want to provide an explicit type declaration
+    for a name:
+
+  pre.
+    #[b y : real64;]
+    y = 1 + f(x);
+
+  p.
+    See #[a(href=ref_grammar('type-decl')) Grammar: type-decl].
+
+  p.
+    The type of a name can not be changed using a type declaration -
+    the declared type must match the type of the name's expression.
+
+  h2: a(name='recursion') Recursion
+
+  p.
+    Recursion is allowed for the purpose of recursive arrays. However,
+    recursive use of functions is not supported. Some common uses
+    of functional recursion can be achieved with recursive arrays.
+    See #[a(href='#recursive-arrays') Recursive arrays].
+
+
+  h1: a(name='extern-decl') External functions
+
+  p.
+    An external function is declared with a name and a type,
+    and it allows the name to be used as any other function,
+    except that it is not polymorphic:
+
+  pre.
+    <b>external transform : [100]real64 -> [50]real64;</b>
+
+    x[i] = sin(i/100), if i < 100;
+    y = transform(x);
+
+  p.
+    See #[a(href=ref_grammar('external-decl')) Grammar: external-decl].
+
+  p.
+    Precisely how an external function is executed depends
+    on the target form of compilation. See also the page on the
+    #[a(href=doc_path+'/target-cpp') C++ target].
+
+  h1: a(name='arrays') Arrays and Streams
+
+  p.
+    Arrays are a special kind of functions that map integers
+    to values of some primitive type.
+    Each formal parameter of such a function is also called a #[i dimension],
+    and an actual parameter (argument) is also called an #[i index].
+    A multi-parameter function is therefore a
+    multi-dimensional array.
+
+  p.
+    An array dimension ranges from 0 up to (and excluding) some number
+    called array size. However, the size of one dimension can be
+    infinite. Such an array is called a #[i stream].
+
+  p.
+    In this document, we represent a sequence of indices or array sizes for
+    multiple dimensions with a tuple: #{'\<x,y,...\>'}.
+
+  p.
+    Similarly to general functions,
+    arrays and streams can be defined using equations (named)
+    or as part of an expression (unnamed).
+
+  h2: a(name='array-equations') Array equations
+
+  p.
+    See #[a(href=ref_grammar('elem-value-decl')) Grammar: elem-value-decl].
+
+  p.
+    An array equation defines values of array elements at particular indices.
+    In the following example, an array named #[code a]
+    is defined using two equations:
+
+  pre.
+    a[0] = 1;
+    a[n] = 1/n, if i < 10;
+
+  p.
+    On the left-hand side of an equation, each index can be given
+    a specific value (e.g. #[code 0])
+    or a name (e.g. #[code i]).
+    Named indices can be used in the value
+    on the right-hand side of the equation and their range can be constrained
+    using equalities or inequalities following the keyword #[code if].
+    Each index has an implicit lower bound of 0.
+
+  p.
+    The right hand side of an equation can have multiple parts
+    with different index constraints:
+
+  pre.
+    a[n] = {
+        1, if n % 3 == 0;
+        0, otherwise
+    }
+
+  p.
+    Multi-dimensional arrays are defined by declaring multiple indices
+    on the left-hand side of the equation:
+
+  pre.
+    a[x,y] = x+y, if x < 10 and y < 20;
+
+  p.
+    The size of an array is the largest rectangle (or hyperrectangle)
+    containing all the indices defined by the equations.
+    It is an error if any indices in this rectangular area are undefined.
+    For example, the following equation defines a set of indices that do
+    not form a rectangle:
+
+  pre.
+    a[x,y] = x+y, if x < 10 and y < x;
+        ... Error: Array is not rectangular.
+
+  p.
+    An index constraint (following #[code if]) must be a quasi-affine expression in index variables
+    and constant integers.
+    This means it can only contain:
+
+  ul
+    li A constant integer expression.
+    li Addition and subtraction of constants and variables.
+    li Multiplication of a constant and a variable.
+    li Division and modulo of a variable with a constant divisor.
+
+  h2 Array expressions (lambda arrays)
+
+  p.
+    See #[a(href=ref_grammar('array-lambda')) Grammar: array-lambda].
+
+  p.
+    An unnamed array can also be defined using an expression
+    which can be part of a larger expression.
+    In the following example, an array (in bold)
+    is passed as an argument to a function #[code f]:
+
+  pre.
+    r = f(<b>[i:5] -> i*2</b>)
+
+  p.
+    Each index variable between the brackets on the left side of #[code ->]
+    can optionally be followed by its upper bound.
+    This removes the need to specify the bound using index constraints.
+
+
+  h2 Streams
+
+  p.
+    A stream is defined using array equations that
+    leave the upper bound of an index undefined
+    (the lower bound of 0 is still implied):
+
+  pre.
+    s[i] = i * 2;
+
+  p.
+    A stream is also defined using an array expression
+    without an index bounds, or using #[code ~] (infinity) as the index bound:
+
+  pre.
+    [i]   -> i * 2
+    ... or
+    [i:~] -> i * 2
+
+  h2 Nested arrays
+
+  p.
+    Arrays can be defined as elements of other arrays, resulting in an array with combined
+    dimensions:
+
+  pre.
+    a = [t] -> [i:5] -> sin(t*i);
+
+  p.
+    The array "a" is a 2-dimensional array with size #{'<~, 5>'}.
+
+  h2 Array application
+
+  p.
+    An array is applied when followed by indices in square brackets
+    (see #[a(href=ref_grammar('array-application')) Grammar: array-application]):
+
+  pre.
+    a = [x:5,y:10] -> x+y;
+    b = <b>a[3,4]</b>;
+
+  p.
+    An array can be partially applied, just like an ordinary function, which
+    results in an array with the remaining dimensions:
+
+  pre.
+    a = [x:5,y:10] -> x+y;
+    b = <b>a[3]</b>;
+
+  h2: a(name='recursive-arrays') Recursive arrays
+
+  p.
+    A recursive array is defined by using the array name in its own definition:
+
+  pre.
+    a[0] = 0.0;
+    a[n] = a[n-1] * 0.8;
+
+  p.
+    Multiple arrays can be mutually recursive:
+
+  pre.
+    a[0] = 0.0;
+    a[n] = b[n-1] * 0.8;
+    b[n] = a[n] + 1;
+
+  h2 Array enumeration
+
+  p.
+    An array can be defined by listing values of each of its elements
+    (see #[a(href=ref_grammar('array-enum')) Grammar: array-enum]):
+
+  pre.
+    x = 100;
+    a = #[b (4, x*3, (-1, -2), x+2)];
+
+  h2 Array concatenation
+
+  p.
+    Two arrays can be concatenated
+    (see #[a(href=ref_grammar('array-concat')) Grammar: array-concat]).
+    The first array must be finite in its first dimension
+    while the second can be a stream:
+
+  pre.
+    a = ([i:5] -> i) ++ ([j] -> j*2);
+
+  h1: a(name='primitive-values') Primitive values
+
+  p.
+    Arrp supports the following primitive types:
+
+  ul
+    li boolean
+    li int - 32bit signed integers
+    li real32 - 32bit floating points
+    li real64 - 64bit floating points
+    li complex32 - complex numbers with 32bit floating points for real and imaginary part
+    li complex64 - complex numbers with 64bit floating points for real and imaginary part
+
+  p.
+    Literal values can be created for the following types:
+    boolean, int, real64, complex64
+    (see #[a(href=ref_grammar('literal')) Grammar: literal]).
+
+  p.
+    An expression can be converted to other primitive types
+    (see #[a(href='#type-conversion') Type Conversion]).
+
+  h1: a(name='built-in-ops') Built-in operations and functions
+
+  p.
+    Built-in operations and functions operate on primitive types.
+    They can also be applied to arrays, #[a(href='#pointwise-ops') pointwise].
+
+  p.
+    The following tables list relations between argument types
+    and result types, and additional conditions on argument
+    types.
+
+    In addition to type names, the following forms have special meanings:
+
+  ul
+    li #[code a] : Any type. Two occurences in the same row signify the same type.
+    li #[code a : type] : The type "a" must be a particular type or type class "type"
+    li #[code real] : A type class comprising: real32, real64.
+    li #[code complex] : A type class comprising types: complex32, complex64.
+    li #[code simple-numeric] : A type class comprising: int, real.
+    li #[code numeric] : A type class comprising: int, real, complex.
+
+  p.
+    If the types of arguments do not satisfy the conditions, argument promotion is
+    attempted. Only the least number of promotions to satisfy the conditions are
+    done. If there are multiple satisfiable sequences of promotions with equal length,
+    the expression is ambiguous and the program is ill-defined.
+
+  p.
+    The following type promotions are attempted:
+
+  ul
+    li int &#8594 real64
+    li real32 &#8594 complex32
+    li real64 &#8594 complex64
+
+  h2 Unary and binary operators
+
+  :markdown-it
+
+      expression          | result      | conditions            | comments
+      --------------------|-------------|-----------------------|----------
+      `!bool`             | `bool`      |                       |
+      `bool || bool`      | `bool`      |                       |
+      `bool && bool`      | `bool`      |                       |
+      `bool && bool`      | `bool`      |                       |
+      `a == a`            | `bool`      |                       |
+      `a != a`            | `bool`      |                       |
+      `a < a`             | `bool`      | `a : simple-numeric`      |
+      `a <= a`            | `bool`      | `a : simple-numeric`      |
+      `a > a`             | `bool`      | `a : simple-numeric`      |
+      `a >= a`            | `bool`      | `a : simple-numeric`      |
+      `a + a`             | `bool`      | `a : numeric`         |
+      `a - a`             | `bool`      | `a : numeric`         |
+      `a * a`             | `bool`      | `a : numeric`         |
+      `a / a`             | `bool`      | `a : real or complex` | Floating point or complex division.
+      `a // a`            | `bool`      | `a : simple-numeric`      | Integer division.
+      `int % int`         | `int`       |                       | Remainder.
+      `a ^ a`             | `a`         | `a : simple-numeric`      | Exponentiation.
+
+
+  h2 Math functions
+
+  :markdown-it
+
+      expression     | result      | conditions          | comments
+      ---------------|-------------|---------------------|----------
+      `exp(a)`       | `a`         | `a : real or complex`  |
+      `exp2(a)`      | `a`         | `a : int or real`      |
+      `log(a)`       | `a`         | `a : real or complex`  |
+      `log2(a)`      | `a`         | `a : real`             |
+      `log10(a)`     | `a`         | `a : real or complex`  |
+      `sqrt(a)`      | `a`         | `a : real or complex`  |
+      `sin(a)`       | `a`         | `a : real or complex`  |
+      `cos(a)`       | `a`         | `a : real or complex`  |
+      `tan(a)`       | `a`         | `a : real or complex`  |
+      `asin(a)`      | `a`         | `a : real or complex`  |
+      `acos(a)`      | `a`         | `a : real or complex`  |
+      `atan(a)`      | `a`         | `a : real or complex`  |
+      `ceil(a)`      | `a`         | `a : int or real`      |
+      `floor(a)`     | `a`         | `a : int or real`      |
+      `abs(a)`       | `a`         | `a : int or real`      |
+      `min(a,a)`     | `a`         | `a : int or real`      |
+      `max(a,a)`     | `a`         | `a : int or real`      |
+
+  h2 Complex number functions
+
+  :markdown-it
+
+      expression        | result      | conditions          | comments
+      ------------------|-------------|---------------------|----------
+      `real(complex32)` | `real32`    |                     | Real part of complex number.
+      `real(complex64)` | `real64`    |                     | Real part of complex number.
+      `imag(complex32)` | `real32`    |                     | Imaginary part of complex number.
+      `imag(complex64)` | `real64`    |                     | Imaginary part of complex number.
+
+
+  h2 #[a(name='type-conversion') Type conversion functions]
+
+  :markdown-it
+
+      expression     | result      | conditions          | comments
+      ---------------|-------------|---------------------|----------
+      `int(a)`       | `int`       | `a : simple-numeric`    |
+      `real32(a)`    | `real32`    | `a : simple-numeric`    |
+      `real64(a)`    | `real64`    | `a : simple-numeric`    |
+      `complex32(a)` | `complex32` | `a : numeric`       |
+      `complex64(a)` | `complex64` | `a : numeric`       |
+
+
+  h1: a(name='pointwise-ops') Pointwise operations and broadcasting
+
+  h2 Pointwise application of primitive operations
+
+  p.
+    When a primitive operation is applied to arrays, it is performed pointwise
+    on array elements, given that the array sizes are compatible:
+
+  pre.
+    a = ([i:5] -> i) + ([i:5] -> 10*i);
+
+  h2 Broadcasting
+
+  p.
+    Two array sizes are compatible if they are equal in all common dimensions.
+    The result of the operation will have the size of the array with more dimensions.
+
+  p.
+    If an argument has less dimensions than the result, the result at some index
+    will use the value of the argument at an index equal in the common dimensions.
+
+  p.
+    In addition, a primitive value is compatible with an array of any size,
+    and will be used for all the result values.
+
+  p.
+    For example, the array "a" can be multiplied with a constant value (b),
+    with an array of equal size (c), or an array with more dimensions (d):
+
+  pre.
+    a[t] = sin(t*0.2);
+    b = a * 0.1;
+    c = a * [t] -> sin(t*0.01);
+    d = a * [t] -> [i:10] -> sin(t*0.1/i);
+
+  h2 Broadcasting in indexing
+
+  p.
+    An array or primitive value can be indexed with more indices than it has
+    dimensions, resulting in the array value at an index with equal common dimensions.
+
+  p.
+    For example, the function #[code f] can be applied to the primitive value #[code a], in which
+    case !{'<code>k[t]</code>'} is a constant expression. It can also be applied to
+    the stream #[code b] so that !{'<code>k[t]</code>'} is variable:
+
+  pre.
+    f(k) = [t] -> sin(t * k[t]);
+    a = f(0.1);
+    b = f([t] -> sin(t * 0.01));
+
+  h2 Broadcasting in array definition
+
+  p.
+    Broadcasting also applies to a set of array equations.
+    If the values on the right hand sides are arrays of different sizes, the result reuses
+    values of arrays with smaller number of dimensions just like in a primitive
+    operation:
+
+  pre.
+    a[0] = 1;
+    a[t] = [i:10] -> t + i;

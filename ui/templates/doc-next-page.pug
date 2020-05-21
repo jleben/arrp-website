@@ -1,0 +1,11 @@
+extends /templates/default-page.pug
+
+include doc-version-menu.pug
+
+block page-content
+
+  +doc_version_menu('next')
+
+  - var doc_path='/doc/next'
+
+  block doc-content

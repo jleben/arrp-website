@@ -1,0 +1,22 @@
+extends /templates/doc-next-page.pug
+
+block doc-content
+
+  h1 Arrp Syntax
+
+  h2 Notation
+
+  p.
+    The syntax is specified in the EBNF notation,
+    as #[a(href='https://www.w3.org/TR/REC-xml/#sec-notation') defined by W3C].
+  p.
+    Rules are separated by empty lines.
+  p.
+    Any number of spaces, tab characters and line breaks
+    are allowed before or after any symbol or literal, except
+    within the rules for symbols:
+    "id", "qualified-id", "int", "real", "complex".
+
+  h2 Formal Grammar
+
+  include /templates/grammar-next.pug

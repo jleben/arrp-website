@@ -1,0 +1,157 @@
+
+module = module-decl? imports declarations
+
+module-decl = "module" id ";"
+
+imports = import-decl*
+
+import-decl = "import" id ( "as" id )? ";"
+
+declarations = ( declaration ( ";" declaration )* )? ";"?
+
+declaration = input-decl | external-decl | local-decl
+
+input-decl = "input" type-decl
+
+output-decl = "output" (id | type-decl | value-decl)
+
+external-decl = "external" type-decl
+
+local-decl = type-decl | value-decl | elem-value-decl | func-decl
+
+local-decls = local-decl ( ";" declaration )*
+
+type-decl = id ":" type
+
+func-decl = id "(" param-list ")" "=" expr
+
+value-decl = id "=" expr
+
+elem-value-decl = id "[" index-pattern "]"  "=" array-values
+
+param-list = id ( "," id )*
+
+type = data-type | function-type
+
+data-type = array-type | primitive-type
+
+array-type = "[" expr-list "]" primitive-type
+
+primitive-type = id
+
+function-type = data-type ( "," data-type ) "->" data-type
+
+expr =
+    id
+    |
+    qualified-id
+    |
+    literal
+    |
+    infinity
+    |
+    unary-op expr
+    |
+    expr binary-op expr
+    |
+    conditional
+    |
+    func-lambda
+    |
+    func-application
+    |
+    func-composition
+    |
+    array-lambda
+    |
+    array-enum
+    |
+    array-concat
+    |
+    array-application
+    |
+    array-size
+    |
+    "(" expr ")"
+    |
+    let-expr
+    |
+    where-expr
+    |
+    id "=" expr
+
+unary-op = "!" | "-"
+
+binary-op =
+    "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" |
+    "+" | "-" | "*" | "/" | "//" | "%" | "^"
+
+conditional = "if" expr "then" expr "else" expr
+
+func-lambda =
+    "(" param-list ")" "->" expr
+
+func-application = expr "(" expr-list ")"
+
+func-composition = expr "." expr
+
+array-lambda = "[" array-lambda-params "]" "->" expr
+
+array-lambda-params =  id (":" int)? ("," id (":" int)?)*
+
+index-pattern = index-pattern-elem ( "," index-pattern-elem )*
+
+index-pattern-elem = id | int
+
+array-values  =
+    expr
+    |
+    expr "," index-bounds
+    |
+    "{"      expr "," index-bounds
+        (";" expr "," index-bounds)*
+        (";" expr "," "otherwise")?
+         ";"?
+    "}"
+
+index-bounds = expr
+
+array-enum = "(" expr-list ")"
+
+array-concat = expr "++" expr
+
+array-application = expr "[" expr-list "]"
+
+array-size = "#" array-size-object ( "@" array-size-dim )?
+
+array-size-object = expr
+
+array-size-dim = expr
+
+let-expr =
+    "let" local-decl "in" expr
+    |
+    "let" "{" local-decls "}" "in" expr
+
+where-expr =
+    expr "where" local-decl
+    |
+    expr "where" "{" local-decls "}"
+
+expr-list = expr ( "," expr )*
+
+id = [a-zA-Z] [a-zA-Z0-9_]*
+
+qualified-id = id "." id
+
+literal = int | real | complex | boolean
+
+infinity = "~"
+
+int = [0-9]+
+
+real = [0-9]+ "." [0-9]+
+
+complex = [0-9]+ ( "." [0-9]+ )? "i"
+
+boolean = "true" | "false"

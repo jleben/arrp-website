@@ -32,7 +32,6 @@ ui: pug
 	-O "{base_url: ''}" \
 	--out /opt/build/public
 	cp -r ui/css ui/js public/
-	mv -f public/home.html public/index.html
 
 clean:
 	sudo rm -rf public

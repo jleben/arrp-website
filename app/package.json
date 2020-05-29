@@ -9,6 +9,7 @@
     "@rollup/plugin-node-resolve": "^8.0.0",
     "@vaadin/router": "^1.7.2",
     "rollup": "^2.11.0",
+    "rollup-plugin-smart-asset": "^2.0.7",
     "rollup-plugin-svelte": "^5.2.2",
     "svelte": "^3.23.0"
   }

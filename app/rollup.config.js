@@ -1,6 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import html from '@rollup/plugin-html';
+import smartAsset from "rollup-plugin-smart-asset"
 
 export default {
   input: 'src/main.js',
@@ -11,6 +12,11 @@ export default {
     format: 'esm'
   },
   plugins: [
+    smartAsset({
+      url: 'copy',
+      extensions: '.md-html',
+      useHash: true
+    }),
     svelte({
       customElement: true
     }),

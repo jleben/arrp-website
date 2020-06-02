@@ -1,9 +1,9 @@
 
-default: build/home.md-html
+default: \
+build/home.md-html \
+build/doc/v1.0.0/index.md-html
 
 
-build/%.md-html: src/%.md build
+build/%.md-html: src/%.md
+	mkdir -p $(@D)
 	pandoc $< -o $@
-
-build:
-	mkdir -p build

@@ -193,11 +193,11 @@ export class RouterLink extends HTMLAnchorElement {
 customElements.define('router-route', Route);
 customElements.define('router-link', RouterLink, { extends: 'a' });
 
-export function fetchHtmlAction(url) {
+export function fetchHtmlAsset(name) {
 
   let action = (context, commands) => {
     let promise =
-      fetch(url)
+      fetch('/' + name)
       .then((response) => response.text())
       .then((text) => {
         console.log('parsing');

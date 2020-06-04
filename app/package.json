@@ -2,8 +2,8 @@
   "name": "arrp-website",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
-    "serve": "npx sirv-cli start dist -s"
+    "build": "make && rollup -c",
+    "serve": "npx sirv-cli start dist -s --dev"
   },
   "dependencies": {
     "@rollup/plugin-html": "^0.2.0",

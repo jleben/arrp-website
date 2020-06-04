@@ -25,7 +25,8 @@ export default {
       dedupe: ['svelte']
     }),
     html({
-      title: 'Arrp'
+      title: 'Arrp',
+      publicPath: '/'
     })
   ]
 };

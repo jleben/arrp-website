@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jleben/arrp-website#readme",
   "devDependencies": {
+    "delete": "^1.1.0",
     "gulp": "^4.0.2",
     "gulp-hash": "^4.2.2",
     "gulp-hash-references": "^3.0.1",

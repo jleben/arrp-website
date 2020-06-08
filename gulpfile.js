@@ -2,6 +2,14 @@ const gulp = require('gulp')
 const hash = require('gulp-hash');
 const hash_references = require('gulp-hash-references');
 const pug = require('gulp-pug');
+const del = require('delete');
+
+const build_dir = 'build';
+const dist_dir = 'public';
+
+function cleanDist(cb) {
+  del([dist_dir], cb)
+}
 
 function versionAssets() {
   return gulp.src(
@@ -12,16 +20,16 @@ function versionAssets() {
     { base: 'ui' }
   )
     .pipe(hash())
-    .pipe(gulp.dest('dist')) // Save the renamed CSS files (e.g. style.123456.css)
-    .pipe(hash.manifest('asset-manifest.json')) // Generate a manifest file
-    .pipe(gulp.dest('build')); // Save the manifest file
+    .pipe(gulp.dest(dist_dir))
+    .pipe(hash.manifest('asset-manifest.json'))
+    .pipe(gulp.dest(build_dir));
 }
 
 function generateHtml() {
   return gulp.src('ui/pages/**/*.pug', { base: 'ui/pages' })
     .pipe(pug({ basedir: 'ui', data: { base_url: '' } }))
     .pipe(hash_references('build/asset-manifest.json'))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest(dist_dir))
 }
 
-exports.default = gulp.series(versionAssets, generateHtml)
+exports.default = gulp.series(cleanDist, versionAssets, generateHtml)

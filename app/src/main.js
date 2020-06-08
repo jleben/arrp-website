@@ -8,6 +8,7 @@ import './doc/doc_v1_0_0.svelte'
 import doc_v1_index from '../build/doc/v1.0.0/index.md-html'
 import doc_v1_compiler from '../build/doc/v1.0.0/compiler.md-html'
 import doc_v1_target_cpp from '../build/doc/v1.0.0/target-cpp.md-html'
+import doc_v1_target_exe from '../build/doc/v1.0.0/target-exe.md-html'
 
 const router = new Router(document.body);
 
@@ -22,6 +23,7 @@ router.setRoutes([
       { path: '/doc/v1.0.0', action: fetchHtmlAsset(doc_v1_index) },
       { path: '/doc/v1.0.0/compiler', action: fetchHtmlAsset(doc_v1_compiler) },
       { path: '/doc/v1.0.0/target-cpp', action: fetchHtmlAsset(doc_v1_target_cpp) },
+      { path: '/doc/v1.0.0/target-exe', action: fetchHtmlAsset(doc_v1_target_exe) },
       { path: '(.*)', action : fetchHtmlAsset(home_page) },
     ]
   }

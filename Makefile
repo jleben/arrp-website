@@ -25,17 +25,11 @@ deploy-compiler:
 	--region=us-central1
 
 .PHONY: ui
-ui: pug
-	mkdir -p public
-	docker run --rm -it -v $(shell pwd):/opt/build pug pug /opt/build/ui/pages \
-	--basedir /opt/build/ui \
-	-O "{base_url: ''}" \
-	--out /opt/build/public
-	cp -r ui/css ui/js public/
+ui: node_modules
+	gulp
+
+node_modules: package.json
+	npm install
 
 clean:
 	sudo rm -rf public
-
-.PHONY: pug
-pug:
-	docker build -t pug -f ui/pug-docker ui

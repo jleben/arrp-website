@@ -1,14 +1,9 @@
 
-mixin doc_version_menu(active_version)
-
-  -
-    options = [
-      { 'name': 'v1.0.0', 'text': 'Current Version (1.0.0)' },
-      { 'name': 'next', 'text': 'Next Version' }
-    ]
+mixin doc_version_menu(version_name, version_page)
 
   ul#doc_version_menu
-    each option in options
-      li(class=(active_version==option.name ? 'active' : 'inactive'))
-        a(href=('/doc/' + option.name))
-          = active_version==option.name ? '> ' + option.text : option.text
+    li(class='active')
+      a(href=('/doc/' + version_page))
+        = version_name
+    li(class='inactive')
+      a(href=('/doc/versions')) Other Versions

@@ -1,0 +1,17 @@
+extends /templates/default-page.pug
+
+block page-content
+  -
+    options = [
+        { 'name': 'v1.0.0', 'text': 'Current Version (1.0.0)' },
+        { 'name': 'next', 'text': 'Next Version' }
+    ]
+
+  p.
+    Documentation is available for these version:
+
+  ul
+    each option in options
+      li
+        a(href=('/doc/' + option.name))
+          = option.text

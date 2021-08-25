@@ -26,7 +26,7 @@ function versionAssets() {
 }
 
 function generateHtml() {
-  return gulp.src('ui/pages/**/*.pug', { base: 'ui/pages' })
+  return gulp.src(['ui/pages/**/*.pug', '!ui/pages/**/*.template.pug'], { base: 'ui/pages' })
     .pipe(pug({ basedir: 'ui', data: { base_url: '' } }))
     .pipe(hash_references('build/asset-manifest.json'))
     .pipe(gulp.dest(dist_dir))

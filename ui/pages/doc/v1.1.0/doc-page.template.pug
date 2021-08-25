@@ -1,0 +1,11 @@
+extends /templates/default-page.pug
+
+include /templates/doc-version-menu.pug
+
+block page-content
+
+  - var doc_path='/doc/v1.1.0'
+
+  +doc_version_menu('Version 1.1.0', doc_path)
+
+  block doc-content

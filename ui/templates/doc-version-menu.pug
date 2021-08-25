@@ -3,7 +3,7 @@ mixin doc_version_menu(version_name, version_page)
 
   ul#doc_version_menu
     li(class='active')
-      a(href=('/doc/' + version_page))
+      a(href=(version_page))
         = version_name
     li(class='inactive')
       a(href=('/doc/versions')) Other Versions

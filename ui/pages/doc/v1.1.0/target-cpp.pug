@@ -1,21 +1,21 @@
-extends /templates/doc-next-page.pug
+extends doc-page.template.pug
 
 block doc-content
 
-  h1 Interface: C++
+  h1 Generated C++ Code
 
   p.
-    By default, the Arrp compiler generates C++ code from an Arrp file:
+    To output C++ code, run the Arrp compiler with the "--cpp" option:
 
-  pre arrp example.arrp
+  pre arrp example.arrp --cpp
 
   p.
-    A header file named "module.h" is generated, with "module" replaced by
+    By default the compiler generates a file named "module.cpp", with "module" replaced by
     the actual name of the compiled module.
-    To generate a file with a different name, say "desired_name.h",
-    add the option "--output desired_name":
+    To generate a file with a different name, follow the "--cpp" option with
+    the desired name. For example, to generate "something.cpp", execute:
 
-  pre arrp example.arrp --output desired_name
+  pre arrp example.arrp --cpp something.cpp
 
   h1 Namespace
 

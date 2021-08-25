@@ -9,7 +9,7 @@ import-decl = "import" id ( "as" id )? ";"
 
 declarations = ( declaration ( ";" declaration )* )? ";"?
 
-declaration = input-decl | external-decl | local-decl
+declaration = input-decl | output-decl | external-decl | local-decl
 
 input-decl = "input" type-decl
 

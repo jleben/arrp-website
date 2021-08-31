@@ -1,0 +1,21 @@
+extends ../doc-page.template.pug
+
+block doc-content
+
+  h1
+    a(href=doc_path + '/library') Arrp Core Library
+    | : math
+
+  h2 pi
+
+  p.
+    The constant π.
+
+  h2 add(x, y)
+
+  Addition #[code x + y] as a function - allowing to pass #[code add] as an argument to another
+  function.
+
+  h2 sum(a)
+
+  The sum of all elements of array a.

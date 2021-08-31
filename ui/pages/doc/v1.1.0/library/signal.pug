@@ -1,0 +1,120 @@
+extends ../doc-page.template.pug
+
+block doc-content
+
+  h1
+    a(href=doc_path + '/library') Arrp Core Library
+    | : signal
+
+  h2 prev(v, x)
+
+  p.
+    The array x prefixed with an element equal to v.
+
+  pre.
+    y[0] = v;
+    y[i] = x[i - 1];
+
+  h2 delay(v, n, x)
+
+  p.
+    The stream x prefixed with n elements equal to v.
+
+  pre.
+    y[i] = v, if i < n;
+    y[i] = x[i - n];
+
+  h2 window(size, hop, x)
+
+  p.
+    A stream of consecutive finite segments of stream x, each with the given size and
+    starting 'hop' elements apart.
+
+  pre.
+    y[i, j] = x[i * hop + j], if j < size
+
+  h2 hold_while(condition, x)
+
+  p.
+    A stream with each element equal to the corresponding element of stream x when condition is false (and at start)
+    (or at start) and equal to its preceding element if condition is true.
+
+  pre.
+    y[0] = x[0];
+    y[i] = x[i], if condition[i] is true;
+    y[i] = y[i - 1];
+
+  h2 phase(freq, start)
+
+  p.
+    A ramp from 0 to 1, repeating with a frequency 'freq' (in repetitions per sample) and
+    starting at 'start'.
+
+  h2 sine(freq, start_phase)
+
+  p.
+    A sine wave in range [-1, 1] with frequency 'freq' (in repetitions per sample)
+    starting at the given start_phase.
+
+  h2 triangle(freq, start_phase)
+
+  p.
+    A triangle wave in range [-1, 1] with frequency 'freq' (in repetitions per sample)
+    starting at the given start_phase.
+
+  h2 square(freq, start_phase)
+
+  p.
+    A square wave in range [-1, 1] with frequency 'freq' (in repetitions per sample)
+    starting at the given start_phase.
+
+  h2 pulse(rate)
+
+  p.
+    A pulse stream - the value 1 repeating every 1/rate elements, with values 0 in between.
+
+  h2 pulse_width(rate, width)
+
+  p.
+    A stream repeating every 1/rate elements; width denotes the beginning fraction of elements
+    in each period equal to 1, with other elements equal to 0.
+
+  h2 white_noise(seed)
+
+  p.
+    White noise - a stream of uniformly distributed values in range [-1, 1.0).
+    The random generator is seeded with the given seed.
+
+  h2 convolve(h, x)
+
+  p.
+    Convolution of stream x with a finite array h.
+
+  h2 iir(a, b, x)
+
+  p.
+    Infinite impulse response filter with feed-forward coefficients b and
+    feed-backward coefficients a, applied to stream x.
+
+  h2 fir(h, x)
+
+  p.
+    Finite impulse response filter with coefficients h (impulse response), applied to stream x.
+
+  h2 one_pole(a, x)
+
+  p.
+    One pole filter with coefficient a, applied to stream x.
+
+  h2 line(r, x)
+
+  p.
+    A linear smoothing of stream x with the output rate limited at r (per sample).
+    Each output element reduces the difference between the previous output element and the current
+    input element by r.
+
+  pre.
+    y[i] = {
+        min(x[i], y[i - 1] + r), if x[i] > y[i - 1];
+        max(x[i], y[i - 1] - r), otherwise;
+    }

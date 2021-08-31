@@ -1,0 +1,63 @@
+extends ../doc-page.template.pug
+
+block doc-content
+
+  h1
+    a(href=doc_path + '/library') Arrp Core Library
+    | : array
+
+  h2 slice(start, len, a)
+
+  p.
+    A segment of array with length len and starting at index start.
+
+  pre.
+    b[i] = a[i + start], if i < len;
+
+  h2 reverse(a)
+
+  p.
+    The reverse of array a.
+
+  pre.
+    b[i] = a[#a - 1 - i];
+
+  h2 iterate(f, init)
+
+  p.
+    A stream starting with init and continuing with the result of application of unary function f
+    on the previous element.
+
+  pre.
+    s[0] = init;
+    s[i] = f(s[i-1]);
+
+  h2 scan(f, a)
+
+  p.
+    An array of equal length as a, containing the results of repetitive applications of the binary
+    function f on each element of a and the result of the previous such application.
+
+  pre.
+    b[0] = a[0];
+    b[i] = f(b[i-1], a[i]), if i < len;
+
+  h2 fold(f, a)
+
+  p.
+    The result of repeated application of the binary function f on each element of a and the
+    result of the previous such application.
+
+  pre.
+    b[#a-1] where {
+        b[0] = a[0];
+        b[i] = f(b[i-1], a[i]);
+    }
+
+  h2 map(f, a)
+
+  p.
+    An array resulting from the application of a unary function f on each element of array a.
+
+  pre.
+    b[i] = f(a[i]);

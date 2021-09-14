@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=:3.10.3
+ARG ALPINE_VERSION=:3.14.2
 
 FROM alpine${ALPINE_VERSION} as builder
 
@@ -27,7 +27,7 @@ RUN apk add autoconf automake libtool gmp-dev python3
 
 RUN git clone https://github.com/jleben/arrp.git && \
     cd arrp && \
-    git checkout 0b3672a058a29edee837168b1afba48e3ee03378 && \
+    git checkout 4b849fb0cfcca5bb1890c7e05077de565391e33b && \
     git submodule update --init --recursive
 
 # Build isl

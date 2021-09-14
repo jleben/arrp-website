@@ -19,7 +19,7 @@ Updating the compiler service:
 
 1. Increment the version number in file `compiler/VERSION`. That will deploy a new service named `arrp-compiler-v<VERSION>`.
 2. Update the service name in rewrite rule in file `firebase.json`.
-3. Update service code in directory `compiler`.
+3. Update service code in directory `compiler`. Change Arrp git commit ID in `compiler/Dockerfile`, etc.
 4. Run `make compiler` to build the Docker image.
 5. Run `make deploy-compiler` to deploy the service on Cloud Run.
 6. Proceed with the static content workflow to test and deploy website with the new service.

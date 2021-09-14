@@ -98,7 +98,9 @@ private:
     const fs::path arrp_source_path = output_path / "program.arrp";
     const fs::path arrp_compile_log_path = output_path / "arrp_compile_log.txt";
     const fs::path arrp_version_path = output_path / "arrp_version.txt";
-    const fs::path cpp_source_path = output_path / "arrp_program.cpp";
+    const string program_name = "program";
+    const fs::path cpp_kernel_path = output_path / "program.h";
+    const fs::path cpp_main_path = output_path / "program-stdio-main.cpp";
     const fs::path cpp_compile_log_path = output_path / "cpp_compile_log.txt";
     const fs::path program_path = output_path / "program";
     const fs::path program_in_path = output_path / "program_in.txt";

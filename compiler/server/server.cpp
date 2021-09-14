@@ -26,6 +26,8 @@ Options & options()
 Server::Server():
     d_server(new Request_Handler_Factory, options().port, params())
 {
+    cerr << "Server starting on port " << options().port << endl;
+
     d_server.start();
 }
 
@@ -112,7 +114,7 @@ void Play_Handler::play(HTTPServerRequest & http_request,
     write_input_files(request);
     get_arrp_version();
     compile_arrp_code();
-    //compile_cpp_code();
+    compile_cpp_code();
     run_program(request.program_out_count);
     send_report(http_response);
 }
@@ -249,8 +251,7 @@ void Play_Handler::write_input_files(Request & request)
 void Play_Handler::get_arrp_version()
 {
     ostringstream cmd;
-    cmd << "ARRP_HOME=" << options().data_path
-        << " " << options().data_path << "/bin/arrp"
+    cmd << " " << options().data_path << "/bin/arrp"
         << " --version"
         << " 2> " << arrp_version_path;
 
@@ -267,15 +268,15 @@ void Play_Handler::compile_arrp_code()
 {
     using namespace Poco::Net;
 
+    auto cwd = fs::current_path();
+
     ostringstream cmd;
-    cmd << "ARRP_HOME=" << options().data_path
-        << " " << options().data_path << "/bin/arrp"
-        << " " << arrp_source_path
-        << " --exe " << program_path
-        << " --cpp-compiler-opts \"-O0\""
-//        << " --cpp " << (cpp_source_path.parent_path() / cpp_source_path.stem())
-//        << " --cpp-namespace arrp"
-        << " 2> " << arrp_compile_log_path;
+    cmd << "cd " << output_path << ";"
+        << " " << (cwd / options().data_path) << "/bin/arrp"
+        << " " << (cwd / arrp_source_path)
+        << " --interface stdio"
+        << " --output " << program_name
+        << " 2> " << (cwd / arrp_compile_log_path);
 
     cerr << "Executing: " << cmd.str() << endl;
 
@@ -294,7 +295,7 @@ void Play_Handler::compile_cpp_code()
     cmd << "g++ -std=c++17"
         << " -I" << options().data_path << "/include"
         << " -I" << output_path
-        << " " << options().data_path << "/generic_main.cpp"
+        << " " << cpp_main_path
         << " -o " << program_path
         << " 2> " << cpp_compile_log_path;
 
@@ -338,8 +339,8 @@ void Play_Handler::send_report(HTTPServerResponse & response, const string & err
     print_file(arrp_source_path);
     cerr << "-- Arrp compilation:" << endl;
     print_file(arrp_compile_log_path);
-    cerr << "-- C++ program:" << endl;
-    print_file(cpp_source_path);
+    cerr << "-- C++ kernel:" << endl;
+    print_file(cpp_kernel_path);
     cerr << "-- C++ compilation:" << endl;
     print_file(cpp_compile_log_path);
     cerr << "-- Program output:" << endl;
@@ -351,7 +352,7 @@ void Play_Handler::send_report(HTTPServerResponse & response, const string & err
     j["arrp_version"] = encode_file_in_base64(arrp_version_path);
     j["arrp"] = encode_file_in_base64(arrp_source_path);
     j["arrp_compiler"] = encode_file_in_base64(arrp_compile_log_path);
-    j["cpp"] = encode_file_in_base64(cpp_source_path);
+    j["cpp"] = encode_file_in_base64(cpp_kernel_path);
     j["cpp_compiler"] = encode_file_in_base64(cpp_compile_log_path);
     j["output"] = encode_file_in_base64(program_out_path);
 

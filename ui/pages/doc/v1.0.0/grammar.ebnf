@@ -106,10 +106,10 @@ index-pattern-elem = id | int
 array-values  =
     expr
     |
-    expr "," index-bounds
+    expr "," "if" index-bounds
     |
-    "{"      expr "," index-bounds
-        (";" expr "," index-bounds)*
+    "{"      expr "," "if" index-bounds
+        (";" expr "," "if" index-bounds)*
         (";" expr "," "otherwise")?
          ";"?
     "}"

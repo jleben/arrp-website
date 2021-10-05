@@ -107,10 +107,10 @@ pre#grammar.
   #[a(name='array-values' class='symbol') array-values]  =
       #[a(href='#expr' class='symbol') expr]
       |
-      #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" #[a(href='#index-bounds' class='symbol') index-bounds]
+      #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" "<span class='literal'>if</span>" #[a(href='#index-bounds' class='symbol') index-bounds]
       |
-      "<span class='literal'>{</span>"      #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" #[a(href='#index-bounds' class='symbol') index-bounds]
-          ("<span class='literal'>;</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" #[a(href='#index-bounds' class='symbol') index-bounds])*
+      "<span class='literal'>{</span>"      #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" "<span class='literal'>if</span>" #[a(href='#index-bounds' class='symbol') index-bounds]
+          ("<span class='literal'>;</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" "<span class='literal'>if</span>" #[a(href='#index-bounds' class='symbol') index-bounds])*
           ("<span class='literal'>;</span>" #[a(href='#expr' class='symbol') expr] "<span class='literal'>,</span>" "<span class='literal'>otherwise</span>")?
            "<span class='literal'>;</span>"?
       "<span class='literal'>}</span>"

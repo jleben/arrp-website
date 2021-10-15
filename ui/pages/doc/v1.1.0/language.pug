@@ -434,19 +434,27 @@ block doc-content
 
   ul
     li boolean
-    li int - 32bit signed integers
-    li real32 - 32bit floating points
-    li real64 - 64bit floating points
+    li int8, int16, int32, int64 - signed integers with size 8, 16, 32, and 64 bits.
+    li uint8, uint16, uint32, uint64 - unsigned integers with size 8, 16, 32, and 64 bits.
+    li int - synonym for int32
+    li real32, real64 - 32 bit and 64 bit floating points
+    li real - synonym for real64
     li complex32 - complex numbers with 32bit floating points for real and imaginary part
     li complex64 - complex numbers with 64bit floating points for real and imaginary part
 
   p.
-    Literal values can be created for the following types:
-    boolean, int, real64, complex64
-    (see #[a(href=ref_grammar('literal')) Grammar: literal]).
+    Literal values can be created for the following types
+    (see #[a(href=ref_grammar('literal')) Grammar: literal]):
+
+  ul
+    li boolean (#[code true] or #[code false])
+    li int32 or int64 (i.e. #[code 123], the smallest type that can fit the value)
+    li int32 or int64 (i.e. #[code 123u], the smallest type that can fit the value)
+    li real64 (i.e. #[code 123.4])
+    li comple64 (i.e. #[code 123.4i])
 
   p.
-    An expression can be converted to other primitive types
+    Values of other types can be created using type conversion expressions
     (see #[a(href='#type-conversion') Type Conversion]).
 
   h1: a(name='built-in-ops') Built-in operations and functions
@@ -457,18 +465,8 @@ block doc-content
 
   p.
     The following tables list relations between argument types
-    and result types, and additional conditions on argument
+    and result types, as well as any additional conditions on argument
     types.
-
-    In addition to type names, the following forms have special meanings:
-
-  ul
-    li #[code a] : Any type. Two occurences in the same row signify the same type.
-    li #[code a : type] : The type "a" must be a particular type or type class "type"
-    li #[code real] : A type class comprising: real32, real64.
-    li #[code complex] : A type class comprising types: complex32, complex64.
-    li #[code simple-numeric] : A type class comprising: int, real.
-    li #[code numeric] : A type class comprising: int, real, complex.
 
   p.
     If the types of arguments do not satisfy the conditions, argument promotion is
@@ -480,83 +478,92 @@ block doc-content
     The following type promotions are attempted:
 
   ul
-    li int &#8594 real64
+    li integer &#8594 integer of same signedness and larger size
+    li integer &#8594 any floating point or complex type
+    li real32 &#8594 real64
     li real32 &#8594 complex32
     li real64 &#8594 complex64
+
+  p.
+    The tables in the following subsections use a few expressions with special meanings:
+
+  ul
+    li T : Type variable.
+    li a:T : The expresion "a" must have type T.
+    li Int : Set of all integer types.
+    li Real : Set of all floating point types.
+    li Complex : Set of all complex types.
+    li SimpleNum : Set of all integer and floating point types.
+    li Num : Set of all integer, floating point and complex types.
 
   h2 Unary and binary operators
 
   :markdown-it
 
-      expression          | result      | conditions            | comments
-      --------------------|-------------|-----------------------|----------
-      `!bool`             | `bool`      |                       |
-      `bool || bool`      | `bool`      |                       |
-      `bool && bool`      | `bool`      |                       |
-      `bool && bool`      | `bool`      |                       |
-      `a == a`            | `bool`      |                       |
-      `a != a`            | `bool`      |                       |
-      `a < a`             | `bool`      | `a : simple-numeric`      |
-      `a <= a`            | `bool`      | `a : simple-numeric`      |
-      `a > a`             | `bool`      | `a : simple-numeric`      |
-      `a >= a`            | `bool`      | `a : simple-numeric`      |
-      `a + a`             | `bool`      | `a : numeric`         |
-      `a - a`             | `bool`      | `a : numeric`         |
-      `a * a`             | `bool`      | `a : numeric`         |
-      `a / a`             | `bool`      | `a : real or complex` | Floating point or complex division.
-      `a // a`            | `bool`      | `a : simple-numeric`      | Integer division.
-      `int % int`         | `int`       |                       | Remainder.
-      `a ^ a`             | `a`         | `a : simple-numeric`      | Exponentiation.
+      expression e   | conditions     | comments
+      ---------------|----------------|----------
+      `!a`           | e:bool, a:bool |
+      `a || b`       | e:bool, a:bool, b:bool  |
+      `a && b`       | e:bool, a:bool, b:bool  |
+      `a == b`       | e:bool, a:T, b:T |
+      `a != b`       | e:bool, a:T, b:T |
+      `a < b`        | e:bool, a:T, b:T, T ∈ SimpleNum |
+      `a <= b`       | e:bool, a:T, b:T, T ∈ SimpleNum |
+      `a > b`        | e:bool, a:T, b:T, T ∈ SimpleNum |
+      `a >= b`       | e:bool, a:T, b:T, T ∈ SimpleNum |
+      `a + b`        | e:T, a:T, b:T, T ∈ Num |
+      `a - b`        | e:T, a:T, b:T, T ∈ Num |
+      `a * b`        | e:T, a:T, b:T, T ∈ Num |
+      `a / b`        | e:U, a:T, b:T, T ∈ Int → U = real64, T ∈ Real ∪ Complex → U = T | Floating point or complex division.
+      `a // b`       | e:T, a:T, b:T, T ∈ Int | Integer division.
+      `a % b`        | e:T, a:T, b:T, T ∈ Int | Remainder.
+      `a ^ b`        | e:T, a:T, b:T, T ∈ SimpleNum | Exponentiation.
 
 
   h2 Math functions
 
   :markdown-it
 
-      expression     | result      | conditions          | comments
-      ---------------|-------------|---------------------|----------
-      `exp(a)`       | `a`         | `a : real or complex`  |
-      `exp2(a)`      | `a`         | `a : int or real`      |
-      `log(a)`       | `a`         | `a : real or complex`  |
-      `log2(a)`      | `a`         | `a : real`             |
-      `log10(a)`     | `a`         | `a : real or complex`  |
-      `sqrt(a)`      | `a`         | `a : real or complex`  |
-      `sin(a)`       | `a`         | `a : real or complex`  |
-      `cos(a)`       | `a`         | `a : real or complex`  |
-      `tan(a)`       | `a`         | `a : real or complex`  |
-      `asin(a)`      | `a`         | `a : real or complex`  |
-      `acos(a)`      | `a`         | `a : real or complex`  |
-      `atan(a)`      | `a`         | `a : real or complex`  |
-      `ceil(a)`      | `a`         | `a : int or real`      |
-      `floor(a)`     | `a`         | `a : int or real`      |
-      `abs(a)`       | `a`         | `a : int or real`      |
-      `min(a,a)`     | `a`         | `a : int or real`      |
-      `max(a,a)`     | `a`         | `a : int or real`      |
+      expression e   | conditions
+      ---------------|---------------------
+      `exp(a)`       | e:T, a:T, T ∈ Real ∪ Complex |
+      `exp2(a)`      | e:T, a:T, T ∈ SimpleNum |
+      `log(a)`       | e:T, a:T, T ∈ Real ∪ Complex |
+      `log2(a)`      | e:T, a:T, T ∈ Real |
+      `log10(a)`     | e:T, a:T, T ∈ Real ∪ Complex |
+      `sqrt(a)`      | e:T, a:T, T ∈ Real ∪ Complex |
+      `sin(a)`       | e:T, a:T, T ∈ Real ∪ Complex |
+      `cos(a)`       | e:T, a:T, T ∈ Real ∪ Complex |
+      `tan(a)`       | e:T, a:T, T ∈ Real ∪ Complex |
+      `asin(a)`      | e:T, a:T, T ∈ Real ∪ Complex |
+      `acos(a)`      | e:T, a:T, T ∈ Real ∪ Complex |
+      `atan(a)`      | e:T, a:T, T ∈ Real ∪ Complex |
+      `ceil(a)`      | e:T, a:T, T ∈ SimpleNum |
+      `floor(a)`     | e:T, a:T, T ∈ SimpleNum |
+      `abs(a)`       | e:T, a:T, T ∈ SimpleNum |
+      `min(a,a)`     | e:T, a:T, T ∈ SimpleNum |
+      `max(a,a)`     | e:T, a:T, T ∈ SimpleNum |
 
   h2 Complex number functions
 
   :markdown-it
 
-      expression        | result      | conditions          | comments
-      ------------------|-------------|---------------------|----------
-      `real(complex32)` | `real32`    |                     | Real part of complex number.
-      `real(complex64)` | `real64`    |                     | Real part of complex number.
-      `imag(complex32)` | `real32`    |                     | Imaginary part of complex number.
-      `imag(complex64)` | `real64`    |                     | Imaginary part of complex number.
-
+      expression e | conditions          | comments
+      -------------|---------------------|----------
+      `real(a)` | a:complex32 → e:real32, a:complex64 → e:real64 | Real part of complex number.
+      `imag(a)` | a:complex32 → e:real32, a:complex64 → e:real64 | Imaginary part of complex number.
 
   h2 #[a(name='type-conversion') Type conversion functions]
 
+  p.
+    An expression #[code T(a)] where #[code T] is substituted with the name of any integer, floating point or
+    complex type, converts the value of `a` to type T, given the following conditions:
+
   :markdown-it
 
-      expression     | result      | conditions          | comments
-      ---------------|-------------|---------------------|----------
-      `int(a)`       | `int`       | `a : simple-numeric`    |
-      `real32(a)`    | `real32`    | `a : simple-numeric`    |
-      `real64(a)`    | `real64`    | `a : simple-numeric`    |
-      `complex32(a)` | `complex32` | `a : numeric`       |
-      `complex64(a)` | `complex64` | `a : numeric`       |
-
+      expression e    | conditions
+      ---------------|-------------|---------------------
+      `T(a)`    | e:T, a:U, T ∈ SimpleNum → U ∈ SimpleNum, T ∈ Complex → U ∈ Complex
 
   h1: a(name='pointwise-ops') Pointwise operations and broadcasting
 

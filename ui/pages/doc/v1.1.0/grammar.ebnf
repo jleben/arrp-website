@@ -148,7 +148,7 @@ literal = int | real | complex | boolean
 
 infinity = "~"
 
-int = [0-9]+
+int = [0-9]+ "u"?
 
 real = [0-9]+ "." [0-9]+
 

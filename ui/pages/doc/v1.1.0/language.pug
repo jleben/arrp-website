@@ -464,25 +464,20 @@ block doc-content
     They can also be applied to arrays, #[a(href='#pointwise-ops') pointwise].
 
   p.
-    The following tables list relations between argument types
-    and result types, as well as any additional conditions on argument
-    types.
+    The following subsections list conditions on argument and result types
+    for built-in operations.
+    If the types of arguments do not immediately satisfy the conditions:
+
+  ol
+    li.
+      A common type is found for each set of types that should be equal
+      through the process of #[a(href='#type-unification') type unification].
+    li.
+      Conditions are satisfied by a set of smallest necessary
+      #[a(href='#type-promotion') type promotions].
 
   p.
-    If the types of arguments do not satisfy the conditions, argument promotion is
-    attempted. Only the least number of promotions to satisfy the conditions are
-    done. If there are multiple satisfiable sequences of promotions with equal length,
-    the expression is ambiguous and the program is ill-defined.
-
-  p.
-    The following type promotions are attempted:
-
-  ul
-    li integer &#8594 integer of same signedness and larger size
-    li integer &#8594 any floating point or complex type
-    li real32 &#8594 real64
-    li real32 &#8594 complex32
-    li real64 &#8594 complex64
+    If the procedure above fails, the program is considered ill-formed (will not compile).
 
   p.
     The tables in the following subsections use a few expressions with special meanings:
@@ -514,7 +509,7 @@ block doc-content
       `a + b`        | e:T, a:T, b:T, T ∈ Num |
       `a - b`        | e:T, a:T, b:T, T ∈ Num |
       `a * b`        | e:T, a:T, b:T, T ∈ Num |
-      `a / b`        | e:U, a:T, b:T, T ∈ Int → U = real64, T ∈ Real ∪ Complex → U = T | Floating point or complex division.
+      `a / b`        | e:T, a:T, b:T, T ∈ Real ∪ Complex | Floating point or complex division.
       `a // b`       | e:T, a:T, b:T, T ∈ Int | Integer division.
       `a % b`        | e:T, a:T, b:T, T ∈ Int | Remainder.
       `a ^ b`        | e:T, a:T, b:T, T ∈ SimpleNum | Exponentiation.
@@ -627,3 +622,37 @@ block doc-content
   pre.
     a[0] = 1;
     a[t] = [i:10] -> t + i;
+
+
+  h2: a(name='type-unification') Type Unification
+
+  p.
+    Type unification is the process through which a common type is found to which
+    each value in a set can be converted.
+    The smallest possible number of conversions is chosen
+    (so the common type is normally one of the original types of the values).
+    The following conversions are allowed:
+
+  ul
+    li integer → integer of same signedness and a larger size
+    li integer → any floating point or complex type
+    li floating point → floating point of larger size
+    li complex → complex number of larger size
+    li floating point → complex number of equal or larger size
+
+  p.
+    Note that the conversion from an integer to a floating point or a complex type allows
+    loss of precision.
+
+  h2: a(name='type-promotion') Type Promotion
+
+  p.
+    Type promotion is the process of converting a value to one of the allowed types without
+    loss of precision. The following conversions are allowed:
+
+  ul
+    li integer → integer of same signedness and a larger size
+    li int8, uint8, int16, uint16 → real32
+    li int32, uint32 → real64
+    li real32 → complex32, real64, complex64
+    li complex32 → complex64

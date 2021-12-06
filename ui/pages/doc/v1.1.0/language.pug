@@ -469,6 +469,9 @@ block doc-content
     If the types of arguments do not immediately satisfy the conditions:
 
   ol
+    // Fix this - This 2-step process doesn't intuitively relate to the 
+    // type conditions in the tables below, and is not always correct
+    // (for example in division operator).
     li.
       A common type is found for each set of types that should be equal
       through the process of #[a(href='#type-unification') type unification].
@@ -506,13 +509,20 @@ block doc-content
       `a <= b`       | e:bool, a:T, b:T, T ∈ SimpleNum |
       `a > b`        | e:bool, a:T, b:T, T ∈ SimpleNum |
       `a >= b`       | e:bool, a:T, b:T, T ∈ SimpleNum |
+      `-a`           | e:T, a:T, T ∈ Num |
       `a + b`        | e:T, a:T, b:T, T ∈ Num |
       `a - b`        | e:T, a:T, b:T, T ∈ Num |
       `a * b`        | e:T, a:T, b:T, T ∈ Num |
       `a / b`        | e:T, a:T, b:T, T ∈ Real ∪ Complex | Floating point or complex division.
       `a // b`       | e:T, a:T, b:T, T ∈ Int | Integer division.
       `a % b`        | e:T, a:T, b:T, T ∈ Int | Remainder.
-      `a ^ b`        | e:T, a:T, b:T, T ∈ SimpleNum | Exponentiation.
+      `a ^ b`        | e:T, a:T, b:T, T ∈ Real ∪ Complex | Exponentiation. Integer arguments are first promoted to real64.
+      `.not a`       | e:T, a:T, T ∈ Int | Bitwise negation.
+      `a .or b`      | e:T, a:T, b:T, T ∈ Int | Bitwise or.
+      `a .and b`     | e:T, a:T, b:T, T ∈ Int | Bitwise and.
+      `a .xor b`     | e:T, a:T, b:T, T ∈ Int | Bitwise exclusive or.
+      `a .<< b`      | e:T, a:T, b:U, T ∈ Int, U ∈ Int | Bitwise left shift.
+      `a .>> b`      | e:T, a:T, b:U, T ∈ Int, U ∈ Int | Bitwise right shift.
 
 
   h2 Math functions
@@ -556,9 +566,9 @@ block doc-content
 
   :markdown-it
 
-      expression e    | conditions
-      ---------------|-------------|---------------------
-      `T(a)`    | e:T, a:U, T ∈ SimpleNum → U ∈ SimpleNum, T ∈ Complex → U ∈ Complex
+      expression e | conditions
+      -------------|-------------|---------------------
+      `T(a)`       | e:T, a:U, T ∈ SimpleNum → U ∈ SimpleNum, T ∈ Complex → U ∈ Complex
 
   h1: a(name='pointwise-ops') Pointwise operations and broadcasting
 
@@ -652,7 +662,6 @@ block doc-content
 
   ul
     li integer → integer of same signedness and a larger size
-    li int8, uint8, int16, uint16 → real32
-    li int32, uint32 → real64
+    li integer → real64
     li real32 → complex32, real64, complex64
     li complex32 → complex64

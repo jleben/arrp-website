@@ -1,0 +1,4 @@
+{
+    "code": "input x : [~]int; output y = x * 2;",
+    "input": "1 2 3"
+}

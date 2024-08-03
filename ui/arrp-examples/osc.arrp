@@ -1,0 +1,15 @@
+
+phase(freq) = p where {
+  p[0] = 0.0;
+  p[t] = wrap(p[t-1] + freq[t]);
+  wrap(y) = if y < 1 then y else y - 1;
+};
+
+osc(freq) = sin(phase(freq) * 2 * pi)
+  where pi = atan(1) * 4;
+
+## 'osc' applies to variable frequency:
+main = osc([t -> 0.1 + t/1000]);
+
+## ... or constant frequency:
+## main = osc(0.1);

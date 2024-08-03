@@ -1,0 +1,10 @@
+
+lpf(a,x) = y where {
+    y[0] = 0.0;
+    y[t] = a*x[t] + (1-a)*y[t-1];
+};
+
+## Test signal
+osc(f) = [t -> sin(f*t*2*pi)] where { pi = atan(1)*4; };
+
+main = [3: i -> lpf(0.1, osc((2*i+1)*0.01))];

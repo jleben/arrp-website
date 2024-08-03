@@ -1,0 +1,6 @@
+windows(size, hop, x) = [t -> [size: i -> x[t*hop + i]]];
+
+signal = [t -> t];
+
+main = windows(4,2,signal);
+

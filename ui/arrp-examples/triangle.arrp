@@ -1,0 +1,5 @@
+phase[i] = (i % 10) / 10;
+
+triangle = 1 - abs(2 * phase - 1);
+
+main = triangle;

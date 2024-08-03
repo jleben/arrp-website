@@ -1,0 +1,8 @@
+mixin toc(list)
+  ul
+    each item in list
+      li
+        a(href=item.url)= item.text
+
+        if 'children' in item
+          +toc(item.children)

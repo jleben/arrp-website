@@ -1,0 +1,26 @@
+
+include /templates/table-of-contents.pug
+
+-
+  list = [
+    {
+      'text': 'Documentation',
+      'url': '/doc/v1.0.0',
+      'children': [
+        {
+          'text': '1.0.0',
+          'url': '/doc/v1.0.0'
+        },
+        {
+          'text': 'next',
+          'url': '/doc/dev'
+        }
+      ]
+    },
+    {
+      'text': 'Playground',
+      'url': '/play'
+    }
+  ]
+
++toc(list)
